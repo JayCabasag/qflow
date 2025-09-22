@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/navbar";
+import { Toaster } from "sonner";
 
 export default async function GroupLayout({
   children,
@@ -12,6 +13,7 @@ export default async function GroupLayout({
     <div className="min-h-screen bg-background">
       <Navbar org={org} />
       <main className="container mx-auto px-6 py-4">{children}</main>
+      <Toaster />
     </div>
   );
 }

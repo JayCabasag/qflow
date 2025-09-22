@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Settings, Play, CheckCircle, RotateCcw } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface QueueItem {
   name: string;
@@ -32,7 +32,6 @@ interface QueueItem {
 
 export function AdminPanel() {
   const [queueData, setQueueData] = useState<QueueItem[]>([]);
-  const { toast } = useToast();
 
   useEffect(() => {
     loadQueueData();
@@ -54,8 +53,7 @@ export function AdminPanel() {
     localStorage.setItem("queueData", JSON.stringify(updatedData));
     setQueueData(updatedData);
 
-    toast({
-      title: "Status Updated",
+    toast("Status Updated", {
       description: `Ticket ${ticketNumber} is now ${newStatus}`,
     });
   };
@@ -67,15 +65,13 @@ export function AdminPanel() {
     if (waitingTickets.length > 0) {
       const nextTicket = waitingTickets[0];
       updateTicketStatus(nextTicket.ticketNumber, "serving");
-      toast({
-        title: "Next Customer Called",
+      toast("Next Customer Called", {
         description: `Now serving ${nextTicket.ticketNumber}`,
       });
+      toast.success("This is a success toast");
     } else {
-      toast({
-        title: "No Waiting Customers",
+      toast("No Waiting Customers", {
         description: "The queue is currently empty",
-        variant: "destructive",
       });
     }
   };
@@ -85,8 +81,7 @@ export function AdminPanel() {
     localStorage.setItem("queueData", JSON.stringify(activeData));
     setQueueData(activeData);
 
-    toast({
-      title: "Completed Tickets Cleared",
+    toast("Completed Tickets Cleared", {
       description: "All completed tickets have been removed",
     });
   };
@@ -95,8 +90,7 @@ export function AdminPanel() {
     localStorage.removeItem("queueData");
     setQueueData([]);
 
-    toast({
-      title: "Queue Reset",
+    toast("Queue Reset", {
       description: "All tickets have been cleared",
     });
   };

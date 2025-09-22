@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Search, Clock, MapPin, User } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface QueueItem {
   name: string;
@@ -23,14 +23,11 @@ export function StatusChecker() {
   const [ticketStatus, setTicketStatus] = useState<QueueItem | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const { toast } = useToast();
 
   const handleSearch = async () => {
     if (!ticketNumber.trim()) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Please enter a ticket number",
-        variant: "destructive",
       });
       return;
     }

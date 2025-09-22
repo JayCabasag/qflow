@@ -7,16 +7,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  AlertCircle,
+  X,
+  XCircle,
+  AlertTriangle,
+  XCircleIcon,
+} from "lucide-react";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 import { TicketModal } from "./ticket-modal";
 import { UserPlus } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import { toast } from "sonner";
 
 interface QueueTicketModalData {
   name: string;
@@ -71,7 +78,6 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedTicket, setGeneratedTicket] =
     useState<QueueTicketModalData | null>(null);
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,20 +97,17 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
 
       if (checkError) {
         console.error("Duplicate check error:", checkError);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Failed to validate entry",
-          variant: "destructive",
         });
         setIsSubmitting(false);
         return;
       }
 
       if (existingData) {
-        toast({
-          title: "Duplicate Entry",
+        toast.error("Duplicate entry", {
           description: "You already have a pending request in the queue.",
-          variant: "destructive",
+          icon: <XCircleIcon className="text-red-500 mx-4" />,
         });
         setIsSubmitting(false);
         return;
@@ -139,17 +142,13 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
           error.message.includes("duplicate") ||
           error.message.includes("violates")
         ) {
-          toast({
-            title: "Already in Queue",
+          toast.error("Already in Queue", {
             description:
               "You already have an active entry in the queue (waiting or being served).",
-            variant: "destructive",
           });
         } else {
-          toast({
-            title: "Registration Failed",
+          toast.error("Registration Failed", {
             description: error.message,
-            variant: "destructive",
           });
         }
         setIsSubmitting(false);
@@ -166,8 +165,7 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
           timestamp: new Date(data.created_at),
         });
 
-        toast({
-          title: "Registration Successful",
+        toast.success("Registration Successful", {
           description: `Your ticket number is ${data.ticket_number}`,
         });
 
@@ -182,10 +180,8 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
       }
     } catch (error) {
       console.error("Unexpected error:", error);
-      toast({
-        title: "Registration Failed",
+      toast.error("Registration Failed", {
         description: "An unexpected error occurred",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);

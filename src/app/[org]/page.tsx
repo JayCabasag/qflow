@@ -51,9 +51,5 @@ export default async function OrganizationPage({
     return <div>No stats found for code: {org}</div>;
   }
 
-  return (
-    <section>
-      <QueueDisplay org={org} queues={queues} stats={stats as any} />
-    </section>
-  );
+  return <QueueDisplay org={org} queues={queues} stats={stats as any} />;
 }

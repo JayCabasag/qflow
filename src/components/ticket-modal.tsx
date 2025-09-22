@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { QRCodeSVG } from "qrcode.react";
 import { Download, Printer, Mail } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface QueueTicketModalData {
   name: string;
@@ -28,8 +28,6 @@ interface TicketModalProps {
 }
 
 export function TicketModal({ ticket, isOpen, onClose }: TicketModalProps) {
-  const { toast } = useToast();
-
   const qrData = JSON.stringify({
     ticketNumber: ticket.ticketNumber,
     name: ticket.name,
@@ -38,23 +36,20 @@ export function TicketModal({ ticket, isOpen, onClose }: TicketModalProps) {
 
   const handleDownloadPDF = () => {
     // In a real app, you'd generate a proper PDF
-    toast({
-      title: "PDF Generated",
+    toast.success("PDF Generated", {
       description: "Your ticket has been downloaded as PDF",
     });
   };
 
   const handlePrint = () => {
     window.print();
-    toast({
-      title: "Print Dialog Opened",
+    toast("Print Dialog Opened", {
       description: "Please use your browser's print function",
     });
   };
 
   const handleEmail = () => {
-    toast({
-      title: "Email Sent",
+    toast.success("Email sent", {
       description: "Ticket has been sent to your email address",
     });
   };
