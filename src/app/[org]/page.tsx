@@ -23,7 +23,7 @@ export default async function OrganizationPage({
         *,
         purpose:purpose_id (
           id,
-          purpose
+          name
         )
       `
     )
@@ -38,6 +38,8 @@ export default async function OrganizationPage({
       org_code: org,
     })
     .maybeSingle();
+
+  console.log(queuesError);
 
   if (error || queuesError || statsError) {
     return notFound();

@@ -48,7 +48,7 @@ interface Queue {
 interface Purpose {
   id: number;
   organization_code: string;
-  purpose: string;
+  name: string;
   order: number;
 }
 
@@ -126,7 +126,7 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
           `*,
         purpose:purpose_id (
           id,
-          purpose
+          name
         ),
         staff:staff_id (
           id,
@@ -249,7 +249,7 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
                         key={purpose.id}
                         value={purpose.id.toString()}
                       >
-                        {purpose.purpose}
+                        {purpose.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

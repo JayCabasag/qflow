@@ -1,3 +1,5 @@
-export default function StaffPage() {
-  return <div>Admin page</div>;
+import { AdminBoard } from "@/components/admin-board";
+
+export default function AdminPage() {
+  return <AdminBoard />;
 }
