@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "QFlow - Effortless Queue Management, Anywhere.",
   description:
     "QFlow is a smart online queuing system with QR code check-in, real-time updates, and digital queue management for businesses of any size.",
   icons: {
-    icon: "/qline-logo.jpg",
+    icon: "/logo.png",
   },
 };
 
@@ -18,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body suppressHydrationWarning={true}>{children}</body>
     </html>
   );
 }

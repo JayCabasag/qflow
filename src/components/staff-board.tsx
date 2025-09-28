@@ -38,8 +38,6 @@ export function StaffBoard({
   stats,
   org,
 }: Props) {
-  const [queueData, setQueueData] = useState<QueueItem[]>([]);
-
   const updateTicketStatus = (
     ticketId: number,
     newStatus: "waiting" | "serving" | "completed"
@@ -64,7 +62,7 @@ export function StaffBoard({
           <div className="flex items-center gap-2">
             <Building className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold text-foreground">
-              {org.toUpperCase()} Queue Management
+              {org.toUpperCase()}
             </h1>
           </div>
           <div className="flex items-center gap-6">
@@ -143,7 +141,7 @@ export function StaffBoard({
                           </div>
                         </div>
                         <div className="text-sm text-muted-foreground mb-1 truncate">
-                          {ticket.purpose.purpose}
+                          {ticket.purpose.name}
                         </div>
                         <div className="text-md text-muted-foreground">
                           {ticket.staff}
@@ -224,7 +222,7 @@ export function StaffBoard({
                           {ticket.name}
                         </div>
                         <div className="text-md text-muted-foreground truncate max-w-32">
-                          {ticket.purpose.purpose}
+                          {ticket.purpose.name}
                         </div>
                       </div>
                     </div>
@@ -278,7 +276,7 @@ export function StaffBoard({
                           {ticket.ticket_number} - {ticket.name}
                         </div>
                         <div className="text-md text-muted-foreground truncate max-w-32">
-                          {ticket.purpose.purpose}
+                          {ticket.purpose.name}
                         </div>
                       </div>
                     </div>

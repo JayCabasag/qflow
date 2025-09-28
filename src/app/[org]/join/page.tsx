@@ -19,7 +19,7 @@ export default async function JoinPage({ params }: JoinPageProps) {
     .from("purpose")
     .select("*")
     .eq("organization_code", org)
-    .order("purpose", { ascending: true });
+    .order("name", { ascending: true });
 
   if (staffError) {
     return <div>No staffs set</div>;

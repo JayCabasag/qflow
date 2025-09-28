@@ -19,10 +19,8 @@ export function Navbar({ org }: Props) {
       <div className="container mx-auto px-6 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* <img src="/qline-logo.jpg" alt="TodayQ" className="h-8 w-8" /> */}
             <button onClick={handleGoHome}>
-              {" "}
-              <h1 className="text-2xl font-bold text-primary">QFlow</h1>
+              <img src="/logo.png" alt="QFlow" className="h-12 w-auto" />
             </button>
           </div>
           <div className="text-right h-12">

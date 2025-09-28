@@ -1,5 +1,5 @@
 export interface Purpose {
-  purpose: string;
+  name: string;
 }
 
 export interface QueueItem {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Monitor, Users, TrendingUp, Smartphone } from "lucide-react";
+import { Monitor, Users, TrendingUp } from "lucide-react";
 import { AnnouncementMarquee } from "./announcement-marquee";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
@@ -79,7 +79,7 @@ export function QueueDisplay({ queues, org, stats }: Props) {
                           </div>
                         </div>
                         <div className="text-sm text-muted-foreground mb-1 truncate">
-                          {customer.purpose.purpose}
+                          {customer.purpose.name}
                         </div>
                         <div className="text-md text-muted-foreground">
                           {customer.staff}
@@ -168,7 +168,7 @@ export function QueueDisplay({ queues, org, stats }: Props) {
                           {item.ticket_number} - {item.name}
                         </div>
                         <div className="text-md text-muted-foreground truncate max-w-45">
-                          {item.purpose.purpose}
+                          {item.purpose.name}
                         </div>
                       </div>
                     </div>
