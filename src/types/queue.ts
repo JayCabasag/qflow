@@ -13,7 +13,7 @@ export interface QueueItem {
   created_at: Date;
 }
 
-export interface Stats {
+export interface QueuesStats {
   serving_count: number;
   waiting_count: number;
   completed_count: number;

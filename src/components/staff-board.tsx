@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -21,23 +20,30 @@ import {
   Building,
 } from "lucide-react";
 import { toast } from "sonner";
-import { QueueItem, Stats } from "@/types";
+import { QueueItem } from "@/types";
+import { useQueues } from "@/hooks";
 
 interface Props {
-  waitingQueues: QueueItem[];
-  completedQueues: QueueItem[];
-  servingQueues: QueueItem[];
-  stats: Stats;
   org: string;
 }
 
-export function StaffBoard({
-  waitingQueues,
-  completedQueues,
-  servingQueues,
-  stats,
-  org,
-}: Props) {
+export function StaffBoard({ org }: Props) {
+  const { useFetchQueuesStats, useFetchQueuesByStatus } = useQueues();
+  const { data: queuesStatsData } = useFetchQueuesStats(org);
+  const { data: queuesByOrgData } = useFetchQueuesByStatus(org);
+
+  const stats = queuesStatsData ?? {
+    waiting_count: 0,
+    completed_count: 0,
+    serving_count: 0,
+  };
+
+  const queuesByOrg = queuesByOrgData ?? {
+    waitingQueues: [],
+    servingQueues: [],
+    completedQueues: [],
+  };
+
   const updateTicketStatus = (
     ticketId: number,
     newStatus: "waiting" | "serving" | "completed"
@@ -117,9 +123,9 @@ export function StaffBoard({
             <h2 className="text-lg font-bold text-foreground">Now Serving</h2>
           </div>
           <div className="flex-1 overflow-y-auto pt-0 pb-3 px-3">
-            {servingQueues.length > 0 ? (
+            {queuesByOrg.servingQueues.length > 0 ? (
               <div className="grid grid-cols-1 gap-2">
-                {servingQueues.map((ticket) => (
+                {queuesByOrg.servingQueues.map((ticket) => (
                   <div
                     key={ticket.ticket_number}
                     className="flex items-center justify-between p-2 bg-white border border-border hover:shadow-sm transition-shadow"
@@ -201,9 +207,9 @@ export function StaffBoard({
             <h2 className="text-lg font-bold text-foreground">Waiting Queue</h2>
           </div>
           <div className="flex-1 overflow-y-auto px-2 pb-2">
-            {waitingQueues.length > 0 ? (
+            {queuesByOrg.waitingQueues.length > 0 ? (
               <div className="space-y-1">
-                {waitingQueues.map((ticket) => (
+                {queuesByOrg.waitingQueues.map((ticket) => (
                   <div
                     key={ticket.ticket_number}
                     className="flex items-center justify-between p-1.5 bg-white border border-border/50 hover:shadow-sm transition-shadow"
@@ -257,9 +263,9 @@ export function StaffBoard({
             <h2 className="text-lg font-bold text-foreground">Completed</h2>
           </div>
           <div className="flex-1 overflow-y-auto px-2 pb-2">
-            {completedQueues.length > 0 ? (
+            {queuesByOrg.completedQueues.length > 0 ? (
               <div className="space-y-1">
-                {completedQueues.map((ticket) => (
+                {queuesByOrg.completedQueues.map((ticket) => (
                   <div
                     key={ticket.ticket_number}
                     className="flex items-center justify-between p-1.5 bg-gray-50 border border-border/30 opacity-75"

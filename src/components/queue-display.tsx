@@ -4,19 +4,29 @@ import { Monitor, Users, TrendingUp } from "lucide-react";
 import { AnnouncementMarquee } from "./announcement-marquee";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
-import { QueueItem, Stats } from "@/types";
+import { useOrganization, useQueues } from "@/hooks";
 
 interface Props {
-  queues: QueueItem[];
-  stats: Stats;
   org: string;
 }
 
-export function QueueDisplay({ queues, org, stats }: Props) {
+export function QueueDisplay({ org }: Props) {
+  const { useFetchQueues, useFetchQueuesStats } = useQueues();
+  const { useFetchOrganization } = useOrganization();
+  const { data: _orgData } = useFetchOrganization(org);
+  const { data: queuesData } = useFetchQueues(org);
+  const { data: queuesStatsData } = useFetchQueuesStats(org);
   const [baseUrl, setBaseUrl] = useState("");
   useEffect(() => {
     setBaseUrl(window.location.origin);
   }, []);
+
+  const queues = queuesData ?? [];
+  const stats = queuesStatsData ?? {
+    waiting_count: 0,
+    completed_count: 0,
+    serving_count: 0,
+  };
 
   const currenltyWaiting = queues.filter((item) => item.status === "waiting");
   const currentlyServing = queues.filter((item) => item.status === "serving");
@@ -28,18 +38,20 @@ export function QueueDisplay({ queues, org, stats }: Props) {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1">
             <Users className="h-3 w-3 text-primary" />
-            <span className="font-medium">{stats.waiting_count} in queue</span>
+            <span className="font-medium">{stats?.waiting_count} in queue</span>
           </div>
           <div className="flex items-center space-x-1">
             <TrendingUp className="h-3 w-3 text-green-600" />
             <span className="font-medium">
-              {stats.completed_count} completed today
+              {stats?.completed_count} completed today
             </span>
           </div>
         </div>
         <div className="flex items-center space-x-1">
           <Monitor className="h-3 w-3 text-primary" />
-          <span className="font-medium">{stats.serving_count} now serving</span>
+          <span className="font-medium">
+            {stats?.serving_count} now serving
+          </span>
         </div>
       </div>
 
@@ -123,13 +135,13 @@ export function QueueDisplay({ queues, org, stats }: Props) {
           <div className="px-2 pb-2 flex-shrink-0">
             <div className="bg-gradient-to-r from-green-50 to-green-100 border border-border p-2">
               <div className="text-center">
-                <div className="w-36 h-36 bg-white shadow-sm flex items-center justify-center mb-1 mx-auto">
+                <div className="w-40 h-40 bg-white shadow-sm flex items-center justify-center mb-1 mx-auto">
                   <img
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
                       `${baseUrl}/${org}/join`
                     )}`}
                     alt="QR Code to join queue"
-                    className="w-36 h-36"
+                    className="w-34 h-34"
                   />
                 </div>
                 <div className="text-md font-semibold text-foreground mb-1">

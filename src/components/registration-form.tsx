@@ -90,6 +90,7 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
         .select("id")
         .eq("name", formData.name)
         .eq("phone", formData.phone)
+        .eq("organization_code", formData.organization_code)
         .eq("purpose_id", formData.purpose_id)
         .eq("staff_id", formData.staff_id)
         .eq("status", "waiting") // Only check against waiting entries
@@ -124,15 +125,15 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
         ])
         .select(
           `*,
-        purpose:purpose_id (
-          id,
-          name
-        ),
-        staff:staff_id (
-          id,
-          name,
-          alias
-        )
+          purpose:purpose_id (
+            id,
+            name
+          ),
+          staff:staff_id (
+            id,
+            name,
+            alias
+          )
         `
         )
         .single();

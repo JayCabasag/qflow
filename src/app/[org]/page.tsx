@@ -1,5 +1,11 @@
+import { getPosts } from "@/api/posts";
 import { QueueDisplay } from "@/components/queue-display";
 import { supabase } from "@/lib/supabaseClient";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
 export default async function OrganizationPage({
@@ -10,28 +16,13 @@ export default async function OrganizationPage({
   const resolvedParams = await params;
   const { org } = resolvedParams;
 
+  const queryClient = new QueryClient();
+
   const { data: organization, error } = await supabase
     .from("organization")
     .select("*")
     .eq("code", org)
     .maybeSingle();
-
-  const { data: queues, error: queuesError } = await supabase
-    .from("queue")
-    .select(
-      `
-        *,
-        purpose:purpose_id (
-          id,
-          name
-        )
-      `
-    )
-    .eq("organization_code", org)
-    .in("status", ["serving", "waiting"])
-    .order("status")
-    .order("created_at")
-    .limit(50);
 
   const { data: stats, error: statsError } = await supabase
     .rpc("get_queue_stats", {
@@ -39,9 +30,7 @@ export default async function OrganizationPage({
     })
     .maybeSingle();
 
-  console.log(queuesError);
-
-  if (error || queuesError || statsError) {
+  if (error || statsError) {
     return notFound();
   }
 
@@ -53,5 +42,9 @@ export default async function OrganizationPage({
     return <div>No stats found for code: {org}</div>;
   }
 
-  return <QueueDisplay org={org} queues={queues} stats={stats as any} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <QueueDisplay org={org} stats={stats as any} />
+    </HydrationBoundary>
+  );
 }
