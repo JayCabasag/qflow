@@ -1,5 +1,8 @@
 "use client";
 
+import { useAuth } from "@/hooks";
+import { SignInData, signInSchema } from "@/hooks/domain/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Mail,
   Lock,
@@ -12,28 +15,44 @@ import {
   Code,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function SignInPage() {
-  const [formData, setFormData] = useState({
-    organizationCode: "",
-    email: "",
-    password: "",
-    rememberMe: false,
-  });
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { useSignInMutation } = useAuth();
+  const signInMutation = useSignInMutation();
 
-  const handleInputChange = (e: any) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInData>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  });
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log("Sign in submitted:", formData);
+  const onSubmit = async (data: SignInData) => {
+    try {
+      await signInMutation.mutateAsync(data);
+
+      toast.success("Logged in successfully!", {
+        description: "You can now use qflow to manage your queues.",
+      });
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      toast.error("Sign up failed", {
+        description: error.message || "An error occurred during sign up",
+      });
+    }
   };
 
   return (
@@ -134,26 +153,7 @@ export default function SignInPage() {
                 Sign In to Your Account
               </h2>
 
-              <div className="space-y-5">
-                {/* Organization code Field */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Organization Code
-                  </label>
-                  <div className="relative">
-                    <Code className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <input
-                      type="text"
-                      name="organizationCode"
-                      value={formData.organizationCode}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-3 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Enter your organization code"
-                      required
-                    />
-                  </div>
-                </div>
-
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 {/* Email Field */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -163,14 +163,18 @@ export default function SignInPage() {
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <input
                       type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-3 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      {...register("email")}
+                      className={`w-full pl-10 pr-3 py-2.5 border focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                        errors.email ? "border-red-500" : "border-gray-300"
+                      }`}
                       placeholder="Enter your email"
-                      required
                     />
                   </div>
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
 
                 {/* Password Field */}
@@ -182,12 +186,11 @@ export default function SignInPage() {
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <input
                       type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-10 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      {...register("password")}
+                      className={`w-full pl-10 pr-10 py-2.5 border focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                        errors.password ? "border-red-500" : "border-gray-300"
+                      }`}
                       placeholder="Enter your password"
-                      required
                     />
                     <button
                       type="button"
@@ -201,6 +204,11 @@ export default function SignInPage() {
                       )}
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
                 {/* Remember Me & Forgot Password */}
@@ -208,11 +216,9 @@ export default function SignInPage() {
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
-                      name="rememberMe"
+                      {...register("rememberMe")}
                       id="rememberMe"
-                      checked={formData.rememberMe}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                      className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500 rounded"
                     />
                     <label
                       htmlFor="rememberMe"
@@ -221,21 +227,21 @@ export default function SignInPage() {
                       Remember me
                     </label>
                   </div>
-                  <a
-                    href="#"
+                  <Link
+                    href="/auth/forgot-password"
                     className="text-sm text-green-600 hover:underline"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Sign In Button */}
                 <button
-                  type="button"
-                  onClick={handleSubmit}
-                  className="w-full bg-green-600 text-white py-3 px-4 font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-green-600 text-white py-3 px-4 font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Sign In
+                  {isSubmitting ? "Signing In..." : "Sign In"}
                 </button>
 
                 {/* Sign Up Link */}
@@ -250,7 +256,7 @@ export default function SignInPage() {
                     </Link>
                   </p>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

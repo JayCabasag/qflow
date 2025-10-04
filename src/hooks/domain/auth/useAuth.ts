@@ -1,6 +1,8 @@
 import { supabase } from "@/lib/supabaseClient";
 import { useMutation } from "@tanstack/react-query";
-import { SignUpData } from "./schema";
+import { SignInData, SignUpData } from "./schema";
+import { signIn, signOut } from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
 
 // Hook for staff sign up
 export function useSignUpMutation() {
@@ -13,9 +15,9 @@ export function useSignUpMutation() {
           data: {
             name: signUpData.name,
             alias: signUpData.alias,
-            org_code: signUpData.orgCode,
+            marketing_opt_in: signUpData.marketing_opt_in,
           },
-          //   emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -28,6 +30,41 @@ export function useSignUpMutation() {
   });
 }
 
+// Hook for staff sign up
+export function useSignInMutation() {
+  return useMutation({
+    mutationFn: async (signInData: SignInData) => {
+      const result = await signIn(signInData.email, signInData.password);
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      return result;
+    },
+  });
+}
+
+// Sign Out Mutation
+export function useSignOutMutation() {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: async () => {
+      const result = await signOut();
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+}
+
 export const useAuth = () => {
-  return { useSignUpMutation };
+  return { useSignUpMutation, useSignInMutation };
 };

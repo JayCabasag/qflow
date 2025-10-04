@@ -1,44 +1,11 @@
 "use client";
-import { CheckCircle, Mail, User, Lock, Building2 } from "lucide-react";
+import { CheckCircle, Mail, User, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"; // or your preferred toast library
 import { useAuth } from "@/hooks";
-
-// Use your existing schema
-const signUpSchema = z
-  .object({
-    email: z.string().email("Invalid email format"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-      ),
-    confirmPassword: z.string(),
-    name: z
-      .string()
-      .min(2, "Name must be at least 2 characters")
-      .max(100, "Name must not exceed 100 characters"),
-    alias: z
-      .string()
-      .min(2, "Alias must be at least 2 characters")
-      .max(100, "Alias must not exceed 100 characters"),
-    orgCode: z.string().min(1, "Organization code is required"),
-    terms: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms and conditions",
-    }),
-    marketing: z.boolean().optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type SignUpFormData = z.infer<typeof signUpSchema>;
+import { SignUpData, signUpSchema } from "@/hooks/domain/auth";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -49,7 +16,7 @@ export default function SignupPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormData>({
+  } = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
@@ -57,24 +24,14 @@ export default function SignupPage() {
       confirmPassword: "",
       name: "",
       alias: "",
-      orgCode: "",
       terms: false,
-      marketing: false,
+      marketing_opt_in: false,
     },
   });
 
-  const onSubmit = async (data: SignUpFormData) => {
+  const onSubmit = async (data: SignUpData) => {
     try {
-      // Use only the fields required by your schema
-      const signUpData = {
-        email: data.email,
-        password: data.password,
-        name: data.name,
-        alias: data.alias,
-        orgCode: data.orgCode,
-      };
-
-      await signUpMutation.mutateAsync(signUpData);
+      await signUpMutation.mutateAsync(data);
 
       toast.success("Account created successfully!", {
         description: "Please check your email to verify your account.",
@@ -219,28 +176,6 @@ export default function SignupPage() {
 
                   <div className="md:col-span-2">
                     <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Organization Code *
-                    </label>
-                    <div className="relative">
-                      <Building2 className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
-                      <input
-                        type="text"
-                        {...register("orgCode")}
-                        placeholder="Enter your organization code"
-                        className={`w-full pl-8 pr-3 py-2 text-sm border ${
-                          errors.orgCode ? "border-red-500" : "border-gray-300"
-                        } focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent`}
-                      />
-                    </div>
-                    {errors.orgCode && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {errors.orgCode.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
                       Email Address *
                     </label>
                     <div className="relative">
@@ -340,7 +275,7 @@ export default function SignupPage() {
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    {...register("marketing")}
+                    {...register("marketing_opt_in")}
                     id="marketing"
                     className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                   />
