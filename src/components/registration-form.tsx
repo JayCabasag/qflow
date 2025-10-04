@@ -35,7 +35,7 @@ interface QueueTicketModalData {
 }
 
 interface Queue {
-  organization_code: string;
+  org_code: string;
   staff_id: number;
   purpose_id: number;
   name: string;
@@ -47,14 +47,14 @@ interface Queue {
 
 interface Purpose {
   id: number;
-  organization_code: string;
+  org_code: string;
   name: string;
   order: number;
 }
 
 interface Staff {
   id: number;
-  organization_code: string;
+  org_code: string;
   name: string;
   alias: string;
   created_at: string;
@@ -68,7 +68,7 @@ interface Props {
 
 export function RegistrationForm({ org, staffs, purposes }: Props) {
   const [formData, setFormData] = useState<Queue>({
-    organization_code: org,
+    org_code: org,
     staff_id: 0,
     purpose_id: 0,
     name: "",
@@ -90,7 +90,7 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
         .select("id")
         .eq("name", formData.name)
         .eq("phone", formData.phone)
-        .eq("organization_code", formData.organization_code)
+        .eq("org_code", formData.org_code)
         .eq("purpose_id", formData.purpose_id)
         .eq("staff_id", formData.staff_id)
         .eq("status", "waiting") // Only check against waiting entries
@@ -172,7 +172,7 @@ export function RegistrationForm({ org, staffs, purposes }: Props) {
 
         // Reset form
         setFormData({
-          organization_code: org,
+          org_code: org,
           name: "",
           phone: "",
           purpose_id: 0,

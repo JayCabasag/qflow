@@ -1,16 +1,16 @@
 import { supabase } from "@/lib/supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 
-export const enum OrganizationKeys {
-  fetchOne = "fetchOneOrganization",
+export const enum OrgKeys {
+  fetchOne = "fetchOneOrg",
 }
 
-const useFetchOrganization = (org: string) => {
+const useFetchOrg = (org: string) => {
   return useQuery({
-    queryKey: [OrganizationKeys.fetchOne],
+    queryKey: [OrgKeys.fetchOne],
     queryFn: async () => {
       const { data: organization, error } = await supabase
-        .from("organization")
+        .from("org")
         .select("*")
         .eq("code", org)
         .maybeSingle();
@@ -24,6 +24,6 @@ const useFetchOrganization = (org: string) => {
   });
 };
 
-export const useOrganization = () => {
-  return { useFetchOrganization };
+export const useOrg = () => {
+  return { useFetchOrg };
 };

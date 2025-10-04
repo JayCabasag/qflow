@@ -12,13 +12,13 @@ export default async function JoinPage({ params }: JoinPageProps) {
   const { data: staffs, error: staffError } = await supabase
     .from("staff")
     .select("*")
-    .eq("organization_code", org)
+    .eq("org_code", org)
     .order("name", { ascending: true });
 
   const { data: purposes, error: purposeError } = await supabase
     .from("purpose")
     .select("*")
-    .eq("organization_code", org)
+    .eq("org_code", org)
     .order("name", { ascending: true });
 
   if (staffError) {

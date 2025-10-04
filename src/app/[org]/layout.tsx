@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "sonner";
 
-export default async function GroupLayout({
+export default async function OrgLayout({
   children,
   params,
 }: Readonly<{

@@ -4,7 +4,7 @@ import { Monitor, Users, TrendingUp } from "lucide-react";
 import { AnnouncementMarquee } from "./announcement-marquee";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
-import { useOrganization, useQueues } from "@/hooks";
+import { useOrg, useQueues } from "@/hooks";
 
 interface Props {
   org: string;
@@ -12,8 +12,8 @@ interface Props {
 
 export function QueueDisplay({ org }: Props) {
   const { useFetchQueues, useFetchQueuesStats } = useQueues();
-  const { useFetchOrganization } = useOrganization();
-  const { data: _orgData } = useFetchOrganization(org);
+  const { useFetchOrg } = useOrg();
+  const { data: _orgData } = useFetchOrg(org);
   const { data: queuesData } = useFetchQueues(org);
   const { data: queuesStatsData } = useFetchQueuesStats(org);
   const [baseUrl, setBaseUrl] = useState("");

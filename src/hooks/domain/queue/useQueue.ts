@@ -23,7 +23,7 @@ export function useFetchQueues(org: string) {
             )
           `
         )
-        .eq("organization_code", org)
+        .eq("org_code", org)
         .in("status", ["serving", "waiting"])
         .order("status")
         .order("created_at")
@@ -47,7 +47,7 @@ export function useFetchQueuesStats(org: string) {
     queryFn: async () => {
       const { data: stats, error } = await supabase
         .rpc("get_queue_stats", {
-          org_code: org,
+          code: org,
         })
         .maybeSingle();
 
@@ -67,7 +67,7 @@ export function useFetchQueuesByStatus(org: string) {
     queryFn: async () => {
       const { data: allQueues, error: allQueuesError } = await supabase.rpc(
         "get_queues_by_status",
-        { org_code: org }
+        { code: org }
       );
 
       if (allQueuesError) {

@@ -1,2 +1,4 @@
 export * from "./queue/useQueue";
-export * from "./organization/useOrganization";
+export * from "./org/useOrg";
+export * from "./staff/useStaff";
+export * from "./auth/useAuth";

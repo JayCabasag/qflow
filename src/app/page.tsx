@@ -28,7 +28,7 @@ import Link from "next/link";
 export default function LandingPage() {
   const router = useRouter();
   const onFreeTrialClick = () => {
-    router.push("/signin");
+    router.push("/auth/signup");
   };
   const onWatchDemoClick = () => {
     router.push("/demo-org");
@@ -89,7 +89,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
-                onClick={() => router.push("/signin")}
+                onClick={() => router.push("/auth/signin")}
                 className="hidden md:inline-flex"
               >
                 Log in
