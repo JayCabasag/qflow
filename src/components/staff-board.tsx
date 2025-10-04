@@ -62,57 +62,35 @@ export function StaffBoard({ org }: Props) {
   return (
     <div className="space-y-3">
       {/* Organization Header */}
-      <div className="bg-white border border-border shadow-sm p-4">
-        {/* Organization Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Building className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold text-foreground">
-              {org.toUpperCase()}
-            </h1>
-          </div>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-1.5">
-              <Users className="h-4 w-4 text-primary" />
-              <div className="text-sm">
-                <span className="font-semibold">{stats.waiting_count}</span>
-                <span className="text-muted-foreground ml-1">waiting</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Monitor className="h-4 w-4 text-amber-500" />
-              <div className="text-sm">
-                <span className="font-semibold">{stats.serving_count}</span>
-                <span className="text-muted-foreground ml-1">serving</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <TrendingUp className="h-4 w-4 text-green-600" />
-              <div className="text-sm">
-                <span className="font-semibold">{stats.completed_count}</span>
-                <span className="text-muted-foreground ml-1">completed</span>
-              </div>
-            </div>
-          </div>
+      <div className="bg-white border border-border shadow-sm p-4 flex justify-between">
+        <div className="flex items-center gap-2">
+          <Building className="h-6 w-6 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">
+            {org.toUpperCase()}
+          </h1>
         </div>
-
-        {/* Controls Section */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Settings className="h-4 w-4 text-primary" />
-            <h2 className="text-sm font-semibold text-foreground">
-              Queue Controls
-            </h2>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-1.5">
+            <Users className="h-4 w-4 text-primary" />
+            <div className="text-sm">
+              <span className="font-semibold">{stats.waiting_count}</span>
+              <span className="text-muted-foreground ml-1">waiting</span>
+            </div>
           </div>
-          <Button
-            onClick={callNextInQueue}
-            className="flex items-center gap-2"
-            size="sm"
-            disabled={stats.waiting_count === 0}
-          >
-            <Play className="h-3.5 w-3.5" />
-            Call Next Customer
-          </Button>
+          <div className="flex items-center gap-1.5">
+            <Monitor className="h-4 w-4 text-amber-500" />
+            <div className="text-sm">
+              <span className="font-semibold">{stats.serving_count}</span>
+              <span className="text-muted-foreground ml-1">serving</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <TrendingUp className="h-4 w-4 text-green-600" />
+            <div className="text-sm">
+              <span className="font-semibold">{stats.completed_count}</span>
+              <span className="text-muted-foreground ml-1">completed</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -121,6 +99,15 @@ export function StaffBoard({ org }: Props) {
         <div className="lg:col-span-2 bg-white border border-border shadow-sm overflow-hidden flex flex-col">
           <div className="flex flex-row items-center justify-between pb-1 px-3 pt-3 flex-shrink-0">
             <h2 className="text-lg font-bold text-foreground">Now Serving</h2>
+            <Button
+              onClick={callNextInQueue}
+              className="flex items-center gap-2"
+              size="sm"
+              disabled={stats.waiting_count === 0}
+            >
+              <Play className="h-3.5 w-3.5" />
+              Call Next Customer
+            </Button>
           </div>
           <div className="flex-1 overflow-y-auto pt-0 pb-3 px-3">
             {queuesByOrg.servingQueues.length > 0 ? (
