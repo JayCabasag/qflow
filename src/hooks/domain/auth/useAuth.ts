@@ -65,6 +65,32 @@ export function useSignOutMutation() {
   });
 }
 
+// Hook for resending verification email
+export function useResendVerificationMutation() {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return { success: true };
+    },
+  });
+}
+
 export const useAuth = () => {
-  return { useSignUpMutation, useSignInMutation };
+  return {
+    useSignUpMutation,
+    useSignInMutation,
+    useSignOutMutation,
+    useResendVerificationMutation,
+  };
 };

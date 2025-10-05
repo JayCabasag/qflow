@@ -38,7 +38,7 @@ export default function SignupPage() {
       });
 
       // Redirect to success page or login
-      router.push("/auth/verify-email");
+      router.push(`/auth/verify-email?email=${data.email}`);
     } catch (error: any) {
       toast.error("Sign up failed", {
         description: error.message || "An error occurred during sign up",
@@ -88,7 +88,7 @@ export default function SignupPage() {
                     <h3 className="font-medium text-gray-900 text-sm">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-gray-600">{item.desc}</p>
+                    <p className="text-sm text-gray-600">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -99,17 +99,17 @@ export default function SignupPage() {
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div>
                   <div className="text-lg font-bold text-green-600">10K+</div>
-                  <div className="text-xs text-gray-600">Users</div>
+                  <div className="text-sm text-gray-600">Users</div>
                 </div>
                 <div>
                   <div className="text-lg font-bold text-green-600">98%</div>
-                  <div className="text-xs text-gray-600">Satisfaction</div>
+                  <div className="text-sm text-gray-600">Satisfaction</div>
                 </div>
                 <div>
                   <div className="text-lg font-bold text-green-600">
                     &lt;2min
                   </div>
-                  <div className="text-xs text-gray-600">Setup</div>
+                  <div className="text-sm text-gray-600">Setup</div>
                 </div>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function SignupPage() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Full Name *
                     </label>
                     <div className="relative">
@@ -146,14 +146,14 @@ export default function SignupPage() {
                       />
                     </div>
                     {errors.name && (
-                      <p className="text-xs text-red-500 mt-1">
+                      <p className="text-sm text-red-500 mt-1">
                         {errors.name.message}
                       </p>
                     )}
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Alias/Username *
                     </label>
                     <div className="relative">
@@ -168,14 +168,14 @@ export default function SignupPage() {
                       />
                     </div>
                     {errors.alias && (
-                      <p className="text-xs text-red-500 mt-1">
+                      <p className="text-sm text-red-500 mt-1">
                         {errors.alias.message}
                       </p>
                     )}
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Email Address *
                     </label>
                     <div className="relative">
@@ -190,14 +190,14 @@ export default function SignupPage() {
                       />
                     </div>
                     {errors.email && (
-                      <p className="text-xs text-red-500 mt-1">
+                      <p className="text-sm text-red-500 mt-1">
                         {errors.email.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Password *
                     </label>
                     <div className="relative">
@@ -212,14 +212,14 @@ export default function SignupPage() {
                       />
                     </div>
                     {errors.password && (
-                      <p className="text-xs text-red-500 mt-1">
+                      <p className="text-sm text-red-500 mt-1">
                         {errors.password.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Confirm Password *
                     </label>
                     <div className="relative">
@@ -236,7 +236,7 @@ export default function SignupPage() {
                       />
                     </div>
                     {errors.confirmPassword && (
-                      <p className="text-xs text-red-500 mt-1">
+                      <p className="text-sm text-red-500 mt-1">
                         {errors.confirmPassword.message}
                       </p>
                     )}
@@ -254,7 +254,7 @@ export default function SignupPage() {
                       id="terms"
                       className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
-                    <label htmlFor="terms" className="text-xs text-gray-600">
+                    <label htmlFor="terms" className="text-sm text-gray-600">
                       I agree to the{" "}
                       <a href="#" className="text-green-600 hover:underline">
                         Terms
@@ -266,7 +266,7 @@ export default function SignupPage() {
                     </label>
                   </div>
                   {errors.terms && (
-                    <p className="text-xs text-red-500 mt-1">
+                    <p className="text-sm text-red-500 mt-1">
                       {errors.terms.message}
                     </p>
                   )}
@@ -279,7 +279,7 @@ export default function SignupPage() {
                     id="marketing"
                     className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                   />
-                  <label htmlFor="marketing" className="text-xs text-gray-600">
+                  <label htmlFor="marketing" className="text-sm text-gray-600">
                     Send me product updates and marketing communications
                   </label>
                 </div>
@@ -296,7 +296,7 @@ export default function SignupPage() {
                   </button>
                 </div>
 
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-sm text-gray-500 text-center">
                   Your trial starts immediately. No credit card required.
                 </p>
               </div>

@@ -10,24 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Bell,
-  Settings,
-  User,
-  ArrowLeft,
-  Search,
-  Filter,
-  Clock,
-  CheckCircle,
-  XCircle,
-  SkipForward,
   Users,
   Timer,
   UserX,
   Monitor,
   Circle,
-  ChevronRight,
   TrendingUp,
-  Activity,
   ListChecks,
   Trash2,
   UserPlus,
@@ -72,7 +60,7 @@ interface QueueStats {
   average_wait_time: number;
 }
 
-export default function OrganizationDashboard() {
+export default function AdminPage() {
   const [orgName, setOrgName] = useState("Organization Name");
   const [isEditingOrgName, setIsEditingOrgName] = useState(false);
   const [tempOrgName, setTempOrgName] = useState(orgName);
