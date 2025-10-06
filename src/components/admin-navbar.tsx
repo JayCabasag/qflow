@@ -40,7 +40,7 @@ export function AdminNavbar({ email, notifications }: Props) {
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo & Brand */}
-          <Link href={"/dashboard"}>
+          <Link href={"/home"}>
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 bg-green-600 flex items-center justify-center text-white font-bold text-lg">
                 Q

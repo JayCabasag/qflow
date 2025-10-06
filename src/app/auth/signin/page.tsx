@@ -42,15 +42,17 @@ export default function SignInPage() {
   const onSubmit = async (data: SignInData) => {
     try {
       await signInMutation.mutateAsync(data);
-
-      toast.success("Logged in successfully!", {
-        description: "You can now use qflow to manage your queues.",
-      });
-
-      router.push("/dashboard");
     } catch (error: any) {
+      // Server actions needs to redirect
+      if (error.message === "NEXT_REDIRECT") {
+        toast.success("Logged in successfully!", {
+          description: "You can now use qflow to manage your queues.",
+        });
+        throw error; // MUST re-throw to allow redirect to happen
+      }
+
       toast.error("Sign up failed", {
-        description: error.message || "An error occurred during sign up",
+        description: error.message || "An error occurred during sign in",
       });
     }
   };

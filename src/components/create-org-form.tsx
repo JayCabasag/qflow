@@ -90,7 +90,7 @@ export function CreateOrgForm() {
   const onSubmit = async (data: CreateOrgFormData) => {
     console.log("Creating organization:", data);
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    router.push("/dashboard");
+    router.push("/home");
   };
 
   return (
@@ -333,7 +333,7 @@ export function CreateOrgForm() {
         {/* Form Actions */}
         <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-gray-200">
           <Link
-            href="/dashboard"
+            href="/home"
             className="px-5 py-2 border border-gray-300 text-sm text-gray-700 font-medium hover:bg-gray-50 transition-colors"
           >
             Cancel

@@ -4,7 +4,7 @@ import { OrgCard } from "@/components/org-card";
 import { Building2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function DashboardHome() {
+export default function HomePage() {
   const router = useRouter();
   // Mock data - replace with real data from your API
   const organizations = [
@@ -62,7 +62,7 @@ export default function DashboardHome() {
       {organizations.length > 0 && (
         <div className="mb-6">
           <button
-            onClick={() => router.push("/dashboard/create-org")}
+            onClick={() => router.push("/home/create-org")}
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
             <Plus className="h-4 w-4" />
@@ -77,7 +77,7 @@ export default function DashboardHome() {
           <OrgCard
             key={org.id}
             org={org}
-            handleOnViewOrg={() => router.push(`/dashboard/${org.code}`)}
+            handleOnViewOrg={() => router.push(`/home/${org.code}`)}
           />
         ))}
       </div>
@@ -95,7 +95,7 @@ export default function DashboardHome() {
             Create your first organization to start managing queues
           </p>
           <button
-            onClick={() => router.push("/dashboard/create-org")}
+            onClick={() => router.push("/home/create-org")}
             className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-medium hover:bg-green-700 transition-colors"
           >
             <Plus className="h-5 w-5" />

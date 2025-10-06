@@ -18,7 +18,7 @@ export async function signIn(email: string, password: string) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect("/home");
 }
 
 // Sign Up
@@ -38,7 +38,7 @@ export async function signUp(email: string, password: string) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/auth/verify-email");
+  redirect(`/auth/verify-email?email=${email}`);
 }
 
 // Sign Out

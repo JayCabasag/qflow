@@ -21,7 +21,7 @@ export default function CallbackPage() {
           refresh_token: refresh_token,
         })
         .then(() => {
-          router.replace("/dashboard");
+          router.replace("/home");
         });
     } else {
       router.replace("/auth/auth-code-error");
