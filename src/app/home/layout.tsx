@@ -1,5 +1,5 @@
 import { AdminNavbar } from "@/components/admin-navbar";
-import { getCurrentUser } from "../actions/auth";
+import { getCurrentUser } from "../auth/actions";
 
 export default async function RootLayout({
   children,

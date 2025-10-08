@@ -63,7 +63,6 @@ export async function getUserOrgs() {
   // Check if user is authenticated
   const {
     data: { user },
-    error: authError,
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 

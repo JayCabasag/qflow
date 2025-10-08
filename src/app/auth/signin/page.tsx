@@ -51,7 +51,7 @@ export default function SignInPage() {
         throw error; // MUST re-throw to allow redirect to happen
       }
 
-      toast.error("Sign up failed", {
+      toast.error("Sign in failed", {
         description: error.message || "An error occurred during sign in",
       });
     }
