@@ -1,50 +1,16 @@
 "use client";
 
 import { OrgCard } from "@/components/org-card";
+import { useOrg, useUser } from "@/hooks";
 import { Building2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const router = useRouter();
-  // Mock data - replace with real data from your API
-  const organizations = [
-    {
-      id: 1,
-      code: "hospital",
-      name: "City Hospital",
-      logo: "🏥",
-      role: "Admin",
-      stats: {
-        todayServed: 145,
-        currentWaiting: 23,
-        activeCounters: 8,
-      },
-    },
-    {
-      id: 2,
-      code: "clinic",
-      name: "Downtown Clinic",
-      logo: "🏢",
-      role: "Staff",
-      stats: {
-        todayServed: 67,
-        currentWaiting: 12,
-        activeCounters: 4,
-      },
-    },
-    {
-      id: 3,
-      code: "municipal",
-      name: "Municipal Office",
-      logo: "🏛️",
-      role: "Admin",
-      stats: {
-        todayServed: 203,
-        currentWaiting: 45,
-        activeCounters: 12,
-      },
-    },
-  ];
+  const { user } = useUser();
+  const { useFetchAllUserOrgs } = useOrg();
+  const { data } = useFetchAllUserOrgs(user?.id);
+  const orgs = data ?? [];
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
@@ -59,7 +25,7 @@ export default function HomePage() {
       </div>
 
       {/* Create New Organization Button */}
-      {organizations.length > 0 && (
+      {orgs.length > 0 && (
         <div className="mb-6">
           <button
             onClick={() => router.push("/home/create-org")}
@@ -73,7 +39,7 @@ export default function HomePage() {
 
       {/* Organizations Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {organizations.map((org) => (
+        {orgs.map((org) => (
           <OrgCard
             key={org.id}
             org={org}
@@ -83,7 +49,7 @@ export default function HomePage() {
       </div>
 
       {/* Empty State (show when no organizations) */}
-      {organizations.length === 0 && (
+      {/* {organizations.length === 0 && (
         <div className="text-center py-16">
           <div className="inline-flex items-center justify-center h-16 w-16 bg-gray-100 rounded-full mb-4">
             <Building2 className="h-8 w-8 text-gray-400" />
@@ -102,7 +68,7 @@ export default function HomePage() {
             Create Organization
           </button>
         </div>
-      )}
+      )} */}
     </main>
   );
 }

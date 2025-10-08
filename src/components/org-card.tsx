@@ -1,17 +1,8 @@
+import { Org } from "@/hooks/domain/org/schema";
 import { ChevronRight, Clock, Monitor, Users } from "lucide-react";
 
 interface Props {
-  org: {
-    id: number;
-    logo: string;
-    name: string;
-    role: string;
-    stats: {
-      currentWaiting: number;
-      todayServed: number;
-      activeCounters: number;
-    };
-  };
+  org: Org;
   handleOnViewOrg: () => void;
 }
 
@@ -30,13 +21,13 @@ export const OrgCard = ({ org, handleOnViewOrg }: Props) => {
                 {org.name}
               </h3>
               <span
-                className={`inline-block px-2 py-0.5 text-xs font-medium mt-1 ${
-                  org.role === "Admin"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-blue-100 text-blue-700"
-                }`}
+              // className={`inline-block px-2 py-0.5 text-xs font-medium mt-1 ${
+              //   org.role === "Admin"
+              //     ? "bg-green-100 text-green-700"
+              //     : "bg-blue-100 text-blue-700"
+              // }`}
               >
-                {org.role}
+                {/* {org.role} */}
               </span>
             </div>
           </div>
@@ -53,7 +44,7 @@ export const OrgCard = ({ org, handleOnViewOrg }: Props) => {
               <span className="text-sm">Today Served</span>
             </div>
             <span className="font-semibold text-gray-900">
-              {org.stats.todayServed}
+              {/* {org.stats.todayServed} */}
             </span>
           </div>
 
@@ -64,7 +55,7 @@ export const OrgCard = ({ org, handleOnViewOrg }: Props) => {
               <span className="text-sm">Current Waiting</span>
             </div>
             <span className="font-semibold text-orange-600">
-              {org.stats.currentWaiting}
+              {/* {org.stats.currentWaiting} */}
             </span>
           </div>
 
@@ -75,7 +66,7 @@ export const OrgCard = ({ org, handleOnViewOrg }: Props) => {
               <span className="text-sm">Active Counters</span>
             </div>
             <span className="font-semibold text-green-600">
-              {org.stats.activeCounters}
+              {/* {org.stats.activeCounters} */}
             </span>
           </div>
         </div>
