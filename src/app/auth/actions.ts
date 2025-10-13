@@ -1,67 +1,103 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { validatedAction } from "@/lib/auth/middleware";
 import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import z from "zod";
 
-// Sign In
-export async function signIn(email: string, password: string) {
+// Sign in
+
+const signInSchema = z.object({
+  email: z.email().min(3).max(255),
+  password: z.string().min(8).max(100),
+});
+
+export const signIn = validatedAction(signInSchema, async (data, _formData) => {
+  const { email, password } = data;
   const supabase = await createClient();
-
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
-    return { error: error.message };
+    return {
+      error: error.message,
+      email,
+      password,
+    };
   }
 
-  revalidatePath("/", "layout");
   redirect("/home");
-}
+});
 
 // Sign Up
-export async function signUp(email: string, password: string) {
-  const supabase = await createClient();
+const signUpSchema = z
+  .object({
+    email: z.email("Invalid email format"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
+    confirmPassword: z.string(),
+    name: z
+      .string()
+      .min(2, "Name must be at least 2 characters")
+      .max(100, "Name must not exceed 100 characters"),
+    alias: z
+      .string()
+      .min(2, "Alias must be at least 2 characters")
+      .max(100, "Alias must not exceed 100 characters"),
+    terms: z.string(), // Just accept string, no transform
+    marketingOptIn: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
+export const signUp = validatedAction(signUpSchema, async (data, _formData) => {
+  const {
+    email,
+    password,
+    confirmPassword,
+    name,
+    alias,
+    terms,
+    marketingOptIn,
+  } = data;
+
+  const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      data: {
+        name,
+        alias,
+        marketing_opt_in: marketingOptIn,
+      },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
     },
   });
 
   if (error) {
-    return { error: error.message };
+    return {
+      error: error.message,
+      email,
+      password,
+      confirmPassword,
+      name,
+      alias,
+      // marketingOptIn,
+      // Get raw strings from formData
+      terms,
+      marketingOptIn,
+    };
   }
 
-  revalidatePath("/", "layout");
-  redirect(`/auth/verify-email?email=${email}`);
-}
-
-// Sign Out
-export async function signOut() {
-  const supabase = await createClient();
-
-  const { error } = await supabase.auth.signOut();
-
-  if (error) {
-    return { error: error.message };
-  }
-
-  revalidatePath("/", "layout");
-  redirect("/auth/signin");
-}
-
-// Get current user (for server components)
-export async function getCurrentUser() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return user;
-}
+  redirect(`/auth/verify-email?email=${data.email}`);
+});

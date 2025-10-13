@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useMutation } from "@tanstack/react-query";
 import { SignInData, SignUpData } from "./schema";
 import { useRouter } from "next/navigation";
-import { signIn, signOut } from "@/app/auth/actions";
+import { signIn, signOut } from "@/app/auth/actionssa";
 
 // Hook for staff sign up
 export function useSignUpMutation() {
