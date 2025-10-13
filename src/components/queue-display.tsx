@@ -139,9 +139,10 @@ export function QueueDisplay({ org }: Props) {
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
                       `${baseUrl}/${org}/join`
                     )}`}
-                    width="34"
-                    height="34"
+                    width={250}
+                    height={250}
                     alt="QR Code to join queue"
+                    unoptimized
                   />
                 </div>
                 <div className="text-md font-semibold text-foreground mb-1">
