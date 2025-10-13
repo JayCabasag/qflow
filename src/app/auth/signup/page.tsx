@@ -1,16 +1,12 @@
 "use client";
 
 import { CheckCircle, Mail, User, Lock } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { signUp } from "../actions";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { ActionState } from "@/lib/auth/middleware";
 import Link from "next/link";
 
 export default function SignupPage() {
-  const router = useRouter();
-
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
     signUp,
     { error: "" }
@@ -111,7 +107,7 @@ export default function SignupPage() {
                         name="name"
                         placeholder="Enter your full name"
                         required
-                        defaultValue={state.name}
+                        defaultValue={state.name as string}
                         className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       />
                     </div>
@@ -126,7 +122,7 @@ export default function SignupPage() {
                       <input
                         type="text"
                         name="alias"
-                        defaultValue={state.alias}
+                        defaultValue={state.alias as string}
                         placeholder="Choose an alias or username"
                         required
                         className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -143,7 +139,7 @@ export default function SignupPage() {
                       <input
                         type="email"
                         name="email"
-                        defaultValue={state.email}
+                        defaultValue={state.email as string}
                         className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="your@email.com"
                         required
@@ -160,7 +156,7 @@ export default function SignupPage() {
                       <input
                         type="password"
                         name="password"
-                        defaultValue={state.password}
+                        defaultValue={state.password as string}
                         className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="Create password"
                         required
@@ -177,7 +173,7 @@ export default function SignupPage() {
                       <input
                         type="password"
                         name="confirmPassword"
-                        defaultValue={state.confirmPassword}
+                        defaultValue={state.confirmPassword as string}
                         className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="Confirm password"
                         required

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -16,18 +15,12 @@ import {
   Monitor,
   Circle,
   TrendingUp,
-  ListChecks,
   Trash2,
-  UserPlus,
-  Plus,
-  Check,
-  X,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
 import PurposeVisitManagement from "./purpose-visit-management";
-import StaffRequest from "./staff-request-management";
 import StaffRequestManagement from "./staff-request-management";
 
 interface Staff {
@@ -38,19 +31,7 @@ interface Staff {
   currentCustomer?: string;
 }
 
-interface QueueStats {
-  waiting_count: number;
-  serving_count: number;
-  completed_count: number;
-  total_today: number;
-  average_wait_time: number;
-}
-
 export default function AdminBoard() {
-  const [orgName, setOrgName] = useState("Organization Name");
-  const [isEditingOrgName, setIsEditingOrgName] = useState(false);
-  const [tempOrgName, setTempOrgName] = useState(orgName);
-
   const [staffList, setStaffList] = useState<Staff[]>([
     {
       id: "1",
@@ -234,7 +215,7 @@ export default function AdminBoard() {
         <div className="bg-white shadow-sm">
           <div className="px-3 py-2 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900 text-xs">
-              Today's Metrics
+              Today&apos;s Metrics
             </h3>
           </div>
 

@@ -47,9 +47,7 @@ export default function VerifyEmailPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Verify Your Email
           </h2>
-          <p className="text-gray-600 mb-6">
-            We've sent a verification link to
-          </p>
+          <p className="text-gray-600 mb-6">Weve sent a verification link to</p>
           <p className="text-sm font-medium text-gray-900 bg-gray-50 px-4 py-2 rounded border border-gray-200 mb-8">
             {email}
           </p>
@@ -65,8 +63,8 @@ export default function VerifyEmailPage() {
                   Check your inbox
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Look for an email from QFlow with the subject "Verify your
-                  email address"
+                  {`Look for an email from QFlow with the subject "Verify your
+                  email address"`}
                 </p>
               </div>
             </div>
@@ -104,7 +102,7 @@ export default function VerifyEmailPage() {
           {/* Resend Section */}
           <div className="pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-600 mb-4">
-              Didn't receive the email?
+              Didn&apos;t receive the email?
             </p>
 
             {isSuccess && (
@@ -154,7 +152,7 @@ export default function VerifyEmailPage() {
           {/* Help Text */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-xs text-gray-600 mb-2">
-              Check your spam folder if you don't see it in your inbox
+              Check your spam folder if you don&apos;t see it in your inbox
             </p>
             <p className="text-xs text-gray-600">
               Need help?{" "}

@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Settings,
   Play,
   Bell,
   Users,
@@ -43,11 +42,6 @@ export function StaffBoard({ org }: Props) {
     servingQueues: [],
     completedQueues: [],
   };
-
-  const updateTicketStatus = (
-    ticketId: number,
-    newStatus: "waiting" | "serving" | "completed"
-  ) => {};
 
   const callNextInQueue = () => {
     // Call next InQUE
@@ -156,12 +150,7 @@ export function StaffBoard({ org }: Props) {
                           {new Date(ticket.created_at).toLocaleDateString()}
                         </div>
                       </div>
-                      <Select
-                        value={ticket.status}
-                        onValueChange={(
-                          value: "waiting" | "serving" | "completed"
-                        ) => updateTicketStatus(ticket.id, value)}
-                      >
+                      <Select value={ticket.status}>
                         <SelectTrigger className="w-24 h-6 text-xs">
                           <SelectValue />
                         </SelectTrigger>

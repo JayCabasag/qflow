@@ -90,10 +90,6 @@ export function StatusChecker() {
     }
   };
 
-  const getEstimatedWaitTime = (position: number) => {
-    return position * 5; // 5 minutes per person estimate
-  };
-
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="bg-card border border-border">
@@ -244,7 +240,7 @@ export function StatusChecker() {
               <h3 className="text-lg font-semibold">Ticket Not Found</h3>
             </div>
             <p className="text-muted-foreground">
-              The ticket number "{ticketNumber}" was not found in our system.
+              {`The ticket number "${ticketNumber}" was not found in our system.`}
               Please check the number and try again.
             </p>
           </div>

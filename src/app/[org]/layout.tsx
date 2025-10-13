@@ -6,7 +6,7 @@ export default async function OrgLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { org: string };
+  params: Promise<{ org: string }>;
 }>) {
   const { org } = await params;
   return (

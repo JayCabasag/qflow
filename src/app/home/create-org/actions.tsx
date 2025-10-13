@@ -37,7 +37,7 @@ export async function createOrg(data: CreateOrgData) {
   }
 
   // Insert the new organization
-  const { data: newOrg, error } = await supabase
+  const { error } = await supabase
     .from("org")
     .insert({
       name: data.name,

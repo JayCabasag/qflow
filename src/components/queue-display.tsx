@@ -4,7 +4,8 @@ import { Monitor, Users, TrendingUp } from "lucide-react";
 import { AnnouncementMarquee } from "./announcement-marquee";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
-import { useOrg, useQueues } from "@/hooks";
+import { useQueues } from "@/hooks";
+import Image from "next/image";
 
 interface Props {
   org: string;
@@ -12,8 +13,6 @@ interface Props {
 
 export function QueueDisplay({ org }: Props) {
   const { useFetchQueues, useFetchQueuesStats } = useQueues();
-  const { useFetchOrg } = useOrg();
-  const { data: _orgData } = useFetchOrg(org);
   const { data: queuesData } = useFetchQueues(org);
   const { data: queuesStatsData } = useFetchQueuesStats(org);
   const [baseUrl, setBaseUrl] = useState("");
@@ -136,12 +135,13 @@ export function QueueDisplay({ org }: Props) {
             <div className="bg-gradient-to-r from-green-50 to-green-100 border border-border p-2">
               <div className="text-center">
                 <div className="w-40 h-40 bg-white shadow-sm flex items-center justify-center mb-1 mx-auto">
-                  <img
+                  <Image
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
                       `${baseUrl}/${org}/join`
                     )}`}
+                    width="34"
+                    height="34"
                     alt="QR Code to join queue"
-                    className="w-34 h-34"
                   />
                 </div>
                 <div className="text-md font-semibold text-foreground mb-1">

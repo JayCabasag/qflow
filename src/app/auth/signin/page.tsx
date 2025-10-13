@@ -136,7 +136,7 @@ export default function SignInPage() {
                       }`}
                       placeholder="Enter your email"
                       required
-                      defaultValue={state.email}
+                      defaultValue={state.email as string}
                     />
                   </div>
                 </div>
@@ -156,7 +156,7 @@ export default function SignInPage() {
                       }`}
                       placeholder="Enter your password"
                       required
-                      defaultValue={state.password}
+                      defaultValue={state.password as string}
                     />
                     <button
                       type="button"
@@ -215,7 +215,7 @@ export default function SignInPage() {
                 {/* Sign Up Link */}
                 <div className="text-center pt-4 border-t border-gray-200">
                   <p className="text-sm text-gray-600">
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?
                     <Link
                       href="/auth/signup"
                       className="text-green-600 font-medium hover:underline"

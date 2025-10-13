@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -90,7 +91,7 @@ export default function LandingPage() {
               <Button
                 variant="ghost"
                 onClick={() => router.push("/auth/signin")}
-                className="hidden md:inline-flex"
+                className=" md:inline-flex"
               >
                 Log in
               </Button>
@@ -114,9 +115,9 @@ export default function LandingPage() {
                   <span className="text-primary">Anywhere</span>
                 </h1>
                 <p className="text-xl text-muted-foreground text-pretty">
-                  Transform your business with QFlow's smart queuing system. QR
-                  code check-in, real-time updates, and digital queue management
-                  for businesses of any size.
+                  Transform your business with QFlow&apos;s smart queuing
+                  system. QR code check-in, real-time updates, and digital queue
+                  management for businesses of any size.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -156,52 +157,42 @@ export default function LandingPage() {
             {/* Hero Visual */}
             <div className="relative">
               <div className="bg-white border border-border shadow-sm p-8">
-                <Card className="bg-card border-border shadow-sm">
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-card-foreground">
-                          Queue Status
-                        </h3>
-                        <Badge className="bg-primary/10 text-primary">
-                          Live
-                        </Badge>
-                      </div>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-primary">
-                            12
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Waiting
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-accent">
-                            3
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Serving
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-muted-foreground">
-                            45
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Completed
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Timer className="h-4 w-4 text-primary" />
-                        <span className="text-muted-foreground">
-                          Average wait: 15 minutes
-                        </span>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-card-foreground">
+                      Queue Status
+                    </h3>
+                    <Badge className="bg-primary/10 text-primary">Live</Badge>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">12</div>
+                      <div className="text-xs text-muted-foreground">
+                        Waiting
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-accent">3</div>
+                      <div className="text-xs text-muted-foreground">
+                        Serving
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-muted-foreground">
+                        45
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Completed
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Timer className="h-4 w-4 text-primary" />
+                    <span className="text-muted-foreground">
+                      Average wait: 15 minutes
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -369,9 +360,9 @@ export default function LandingPage() {
                 </h2>
                 <p className="text-lg text-muted-foreground text-pretty">
                   Founded in 2020, QFlow emerged from a simple observation:
-                  waiting in line shouldn't be a frustrating experience. Our
-                  team of engineers and customer experience experts set out to
-                  create a solution that benefits both businesses and their
+                  waiting in line shouldn&apos;t be a frustrating experience.
+                  Our team of engineers and customer experience experts set out
+                  to create a solution that benefits both businesses and their
                   customers.
                 </p>
               </div>
@@ -1020,7 +1011,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <img src="/logo.png" alt="QFlow" className="h-12 w-auto" />
+                <Image src="/logo.png" alt="QFlow" className="h-12 w-auto" />
               </div>
               <p className="text-muted-foreground">
                 Smart queue management for modern businesses.

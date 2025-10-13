@@ -2,8 +2,8 @@ import { useOrg } from "@/hooks";
 import { CreateOrgData, createOrgSchema } from "@/hooks/domain/org/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, Check, Upload, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -19,7 +19,6 @@ const industries = [
 ];
 
 export function CreateOrgForm() {
-  const router = useRouter();
   const { useCreateOrgMutation } = useOrg();
   const createOrgMutation = useCreateOrgMutation();
 
@@ -89,7 +88,7 @@ export function CreateOrgForm() {
             <div className="flex items-center gap-4">
               <div className="h-20 w-20 rounded border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
                 {logoPreview ? (
-                  <img
+                  <Image
                     src={logoPreview}
                     alt="Logo preview"
                     className="h-full w-full object-cover rounded"

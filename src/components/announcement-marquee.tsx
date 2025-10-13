@@ -18,9 +18,9 @@ export function AnnouncementMarquee() {
       <div className="flex items-center h-8">
         <div className="flex-1 overflow-hidden">
           <Marquee>
-            {announcements.map((a) => {
+            {announcements.map((a, index) => {
               return (
-                <div className="whitespace-nowrap">
+                <div className="whitespace-nowrap" key={index}>
                   <span className="text-md font-medium text-white px-4">
                     {a}
                   </span>

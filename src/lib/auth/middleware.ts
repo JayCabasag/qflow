@@ -3,22 +3,19 @@ import z from "zod";
 export type ActionState = {
   error?: string;
   success?: string;
-  // @ts-ignore
-  [key: string]: any; // This allows for additional properties
+  [key: string]: unknown; // This allows for additional properties
 };
 
-// @ts-ignore
-type ValidatedActionFunction<S extends z.ZodType<any, any>, T> = (
+type ValidatedActionFunction<S extends z.ZodType<unknown, unknown>, T> = (
   data: z.infer<S>,
   formData: FormData
 ) => Promise<T>;
 
-// @ts-ignore
-export function validatedAction<S extends z.ZodType<any, any>, T>(
+export function validatedAction<S extends z.ZodType<unknown, unknown>, T>(
   schema: S,
   action: ValidatedActionFunction<S, T>
 ) {
-  return async (prevState: ActionState, formData: FormData) => {
+  return async (_prevState: ActionState, formData: FormData) => {
     const result = schema.safeParse(Object.fromEntries(formData));
 
     const formDataObj = Object.fromEntries(formData);

@@ -12,7 +12,7 @@ const signInSchema = z.object({
   password: z.string().min(8).max(100),
 });
 
-export const signIn = validatedAction(signInSchema, async (data, _formData) => {
+export const signIn = validatedAction(signInSchema, async (data) => {
   const { email, password } = data;
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({
@@ -59,7 +59,7 @@ const signUpSchema = z
     path: ["confirmPassword"],
   });
 
-export const signUp = validatedAction(signUpSchema, async (data, _formData) => {
+export const signUp = validatedAction(signUpSchema, async (data) => {
   const {
     email,
     password,
@@ -92,8 +92,6 @@ export const signUp = validatedAction(signUpSchema, async (data, _formData) => {
       confirmPassword,
       name,
       alias,
-      // marketingOptIn,
-      // Get raw strings from formData
       terms,
       marketingOptIn,
     };

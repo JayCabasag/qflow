@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Clock from "./clock";
 import Link from "next/link";
 
@@ -9,8 +8,6 @@ interface Props {
 }
 
 export function Navbar({ org }: Props) {
-  const router = useRouter();
-
   return (
     <div className="border-b bg-white shadow-sm">
       <div className="container mx-auto px-6 py-2">
