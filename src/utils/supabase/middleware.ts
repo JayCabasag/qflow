@@ -30,7 +30,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protect dashboard routes
-  if (!user && request.nextUrl.pathname.startsWith("/home")) {
+  if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/signin";
     url.searchParams.set("redirectTo", request.nextUrl.pathname);
@@ -39,13 +39,14 @@ export async function updateSession(request: NextRequest) {
 
   // Redirect authenticated users away from auth pages
   if (
-    user &&
-    (request.nextUrl.pathname.startsWith("/auth/signin") ||
-      request.nextUrl.pathname.startsWith("/auth/signup") ||
-      request.nextUrl.pathname.startsWith("/auth/verify-email"))
+    (user &&
+      (request.nextUrl.pathname.startsWith("/auth/signin") ||
+        request.nextUrl.pathname.startsWith("/auth/signup") ||
+        request.nextUrl.pathname.startsWith("/auth/verify-email"))) ||
+    request.nextUrl.pathname.startsWith("/auth/forgot-password")
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = "/home";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 

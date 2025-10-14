@@ -1,68 +1,45 @@
 import { ListChecks, Plus, Trash2 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useActionState, useEffect, useTransition } from "react";
+import { addPurpose, removePurpose } from "@/app/dashboard/[org]/admin/actions";
+import { ActionState } from "@/lib/auth/middleware";
+import { PurposeKey, usePurpose } from "@/hooks";
+import { Purpose } from "@/hooks/domain/purpose/schema";
 import { toast } from "sonner";
 
-interface PurposeOfVisit {
-  id: string;
-  name: string;
-  description: string;
-  estimatedTime: number; // in minutes
-  isActive: boolean;
+interface Props {
+  org: string;
 }
 
-export default function PurposeVisitManagement() {
-  const [newPurposeName, setNewPurposeName] = useState("");
-  const [newPurposeDesc, setNewPurposeDesc] = useState("");
-  const [newPurposeTime, setNewPurposeTime] = useState("");
+export default function PurposeVisitManagement({ org }: Props) {
+  const [, startTransition] = useTransition();
+  const { useFetchManyByOrgQuery, invalidateQuery } = usePurpose();
+  const { data } = useFetchManyByOrgQuery(org);
+  const purposeList: Purpose[] = data ?? [];
 
-  const [purposeList, setPurposeList] = useState<PurposeOfVisit[]>([
-    {
-      id: "1",
-      name: "General Inquiry",
-      description: "General questions and information",
-      estimatedTime: 10,
-      isActive: true,
-    },
-    {
-      id: "2",
-      name: "Document Processing",
-      description: "Process official documents",
-      estimatedTime: 20,
-      isActive: true,
-    },
-    {
-      id: "3",
-      name: "Consultation",
-      description: "Expert consultation service",
-      estimatedTime: 30,
-      isActive: true,
-    },
-    {
-      id: "4",
-      name: "Payment Services",
-      description: "Payment and billing services",
-      estimatedTime: 15,
-      isActive: false,
-    },
-  ]);
+  const [state, formAction, isPending] = useActionState<ActionState, FormData>(
+    addPurpose,
+    { error: "" }
+  );
 
-  const addPurpose = () => {
-    if (newPurposeName.trim() && newPurposeDesc.trim() && newPurposeTime) {
-      const newPurpose: PurposeOfVisit = {
-        id: Date.now().toString(),
-        name: newPurposeName.trim(),
-        description: newPurposeDesc.trim(),
-        estimatedTime: parseInt(newPurposeTime),
-        isActive: true,
-      };
-      setPurposeList([...purposeList, newPurpose]);
-      setNewPurposeName("");
-      setNewPurposeDesc("");
-      setNewPurposeTime("");
-      toast("Purpose Added", {
-        description: `"${newPurpose.name}" has been added to purposes`,
+  const [removeState, removeFormAction, isRemoving] = useActionState<
+    ActionState,
+    FormData
+  >(removePurpose, { error: "" });
+
+  useEffect(() => {
+    if (!isPending && !state.error) {
+      invalidateQuery([PurposeKey.fetchManyByOrgQuery]);
+    }
+  }, [isPending, state, org, invalidateQuery]);
+
+  const handleRemove = (purposeId: number, purposeName: string) => {
+    if (confirm(`Are you sure you want to remove "${purposeName}"?`)) {
+      startTransition(() => {
+        const formData = new FormData();
+        formData.append("id", purposeId.toString());
+        removeFormAction(formData);
       });
     }
   };
@@ -80,41 +57,53 @@ export default function PurposeVisitManagement() {
 
         {/* Add New Purpose */}
         <div className="px-2 pb-2 border-b border-border/50">
-          <div className="space-y-1">
-            <Input
-              placeholder="Purpose name"
-              value={newPurposeName}
-              onChange={(e) => setNewPurposeName(e.target.value)}
-              className="h-6 text-xs"
-            />
-            <Input
-              placeholder="Description"
-              value={newPurposeDesc}
-              onChange={(e) => setNewPurposeDesc(e.target.value)}
-              className="h-6 text-xs"
-            />
-            <div className="flex gap-1">
+          <form action={formAction}>
+            <div className="space-y-1">
               <Input
-                placeholder="Time (min)"
-                type="number"
-                value={newPurposeTime}
-                onChange={(e) => setNewPurposeTime(e.target.value)}
-                className="h-6 text-xs flex-1"
+                type="hidden"
+                name="orgCode"
+                defaultValue={org}
+                className="h-8 text-xs"
               />
-              <Button
-                onClick={addPurpose}
-                size="sm"
-                className="h-6 px-2"
-                disabled={
-                  !newPurposeName.trim() ||
-                  !newPurposeDesc.trim() ||
-                  !newPurposeTime
-                }
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
+              <Input
+                placeholder="Purpose name"
+                name="name"
+                defaultValue={state.name as string}
+                className="h-8 text-xs"
+              />
+              <Input
+                placeholder="Description"
+                name="description"
+                defaultValue={state.description as string}
+                className="h-8 text-xs"
+              />
+              <div className="flex gap-1">
+                <Input
+                  placeholder="Time (min)"
+                  type="number"
+                  name="estimatedTimeInMinutes"
+                  defaultValue={state.estimated_time_in_minutes as string}
+                  className="h-8 text-xs flex-1"
+                />
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="h-8 px-2"
+                  disabled={isPending}
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
+              </div>
+              <div>
+                {/* Error Message */}
+                {state.error && (
+                  <div className="p-2 bg-red-50 border border-red-200 rounded">
+                    <p className="text-sm text-red-600">{state.error}</p>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          </form>
         </div>
 
         <div className="flex-1 overflow-y-auto px-2 pb-2">
@@ -124,7 +113,7 @@ export default function PurposeVisitManagement() {
                 <div
                   key={purpose.id}
                   className={`p-2 border border-border/50 hover:shadow-sm transition-shadow ${
-                    purpose.isActive ? "bg-white" : "bg-gray-50 opacity-75"
+                    purpose.is_active ? "bg-white" : "bg-gray-50 opacity-75"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-1">
@@ -136,7 +125,7 @@ export default function PurposeVisitManagement() {
                         {purpose.description}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        ~{purpose.estimatedTime} min
+                        ~{purpose.estimated_time_in_minutes} min
                       </div>
                     </div>
                   </div>
@@ -146,15 +135,15 @@ export default function PurposeVisitManagement() {
                       variant="outline"
                       size="sm"
                       className={`h-6 px-2 text-xs ${
-                        purpose.isActive
+                        purpose.is_active
                           ? "text-yellow-600 border-yellow-200 hover:bg-yellow-50"
                           : "text-green-600 border-green-200 hover:bg-green-50"
                       }`}
                     >
-                      {purpose.isActive ? "Disable" : "Enable"}
+                      {purpose.is_active ? "Disable" : "Enable"}
                     </Button>
                     <Button
-                      // onClick={() => removePurpose(purpose.id)}
+                      onClick={() => handleRemove(purpose.id, purpose.name)}
                       variant="outline"
                       size="sm"
                       className="h-6 px-2 text-xs text-red-600 border-red-200 hover:bg-red-50"

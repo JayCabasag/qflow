@@ -21,13 +21,13 @@ export const OrgCard = ({ org, handleOnViewOrg }: Props) => {
                 {org.name}
               </h3>
               <span
-              // className={`inline-block px-2 py-0.5 text-xs font-medium mt-1 ${
-              //   org.role === "Admin"
-              //     ? "bg-green-100 text-green-700"
-              //     : "bg-blue-100 text-blue-700"
-              // }`}
+                className={`inline-block px-2 py-0.5 text-xs font-medium mt-1 capitalize ${
+                  org.org_role === "admin"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-blue-100 text-blue-700"
+                }`}
               >
-                {/* {org.role} */}
+                {org.org_role}
               </span>
             </div>
           </div>

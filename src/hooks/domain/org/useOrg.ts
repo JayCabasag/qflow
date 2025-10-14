@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { CreateOrgData, Org } from "./schema";
-import { createOrg } from "@/app/home/create-org/actions";
+import { createOrg } from "@/app/dashboard/create-org/actions";
 
 export const enum OrgKeys {
   fetchOne = "fetchOneOrg",

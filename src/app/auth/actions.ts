@@ -28,7 +28,7 @@ export const signIn = validatedAction(signInSchema, async (data) => {
     };
   }
 
-  redirect("/home");
+  redirect("/dashboard");
 });
 
 // Sign Up

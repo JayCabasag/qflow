@@ -31,7 +31,11 @@ interface Staff {
   currentCustomer?: string;
 }
 
-export default function AdminBoard() {
+interface Props {
+  org: string;
+}
+
+export default function AdminBoard({ org }: Props) {
   const [staffList, setStaffList] = useState<Staff[]>([
     {
       id: "1",
@@ -206,7 +210,7 @@ export default function AdminBoard() {
         {/* Staff Requests */}
         <StaffRequestManagement />
         {/* Purpose management */}
-        <PurposeVisitManagement />
+        <PurposeVisitManagement org={org} />
       </div>
 
       {/* Right Sidebar */}

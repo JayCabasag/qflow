@@ -18,7 +18,7 @@ export async function signIn(email: string, password: string) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/home");
+  redirect("/dashboard");
 }
 
 // Sign Up

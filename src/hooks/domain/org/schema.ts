@@ -36,6 +36,7 @@ export const OrgSchema = z
     updated_at: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
       message: "updated_at must be a valid ISO timestamp string",
     }),
+    org_role: z.string(),
   })
   .strict();
 

@@ -54,7 +54,7 @@ export async function createOrg(data: CreateOrgData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/home");
+  redirect("/dashboard");
 }
 
 export async function getUserOrgs() {

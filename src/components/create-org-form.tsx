@@ -241,7 +241,7 @@ export function CreateOrgForm() {
         {/* Form Actions */}
         <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
           <Link
-            href="/home"
+            href="/dashboard"
             className="px-5 py-2.5 border border-gray-300 rounded text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
           >
             Cancel
