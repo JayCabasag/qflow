@@ -1,13 +1,7 @@
 import { ListChecks, Plus, Trash2 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import {
-  useActionState,
-  useEffect,
-  useTransition,
-  useState,
-  useRef,
-} from "react";
+import { useActionState, useEffect, useTransition, useState } from "react";
 import { addPurpose, removePurpose } from "@/app/dashboard/[org]/admin/actions";
 import { ActionState } from "@/lib/auth/middleware";
 import { PurposeKey, usePurpose } from "@/hooks";
@@ -24,15 +18,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
 
 interface Props {
   org: string;
@@ -41,8 +26,6 @@ interface Props {
 export default function PurposeVisitManagement({ org }: Props) {
   const [, startTransition] = useTransition();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
-
   const [selectedPurpose, setSelectedPurpose] = useState<{
     id: number;
     name: string;
@@ -62,21 +45,10 @@ export default function PurposeVisitManagement({ org }: Props) {
   >(removePurpose, { error: "" });
 
   useEffect(() => {
-    if (!isPending && state.success == "success") {
+    if (!isPending && !state.error) {
       invalidateQuery([PurposeKey.fetchManyByOrgQuery]);
-      setAddDialogOpen(false);
-      state.success = "";
     }
-  }, [isPending, state, invalidateQuery]);
-
-  useEffect(() => {
-    if (!isRemoving && removeState.success == "success") {
-      invalidateQuery([PurposeKey.fetchManyByOrgQuery]);
-      setDeleteDialogOpen(false);
-      setSelectedPurpose(null);
-      removeState.success = "";
-    }
-  }, [isRemoving, removeState, invalidateQuery]);
+  }, [isPending, state, org, invalidateQuery]);
 
   const handleRemoveClick = (purposeId: number, purposeName: string) => {
     setSelectedPurpose({ id: purposeId, name: purposeName });
@@ -90,12 +62,13 @@ export default function PurposeVisitManagement({ org }: Props) {
         formData.append("id", selectedPurpose.id.toString());
         removeFormAction(formData);
       });
+      setDeleteDialogOpen(false);
+      setSelectedPurpose(null);
     }
   };
 
   return (
     <>
-      {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -119,87 +92,66 @@ export default function PurposeVisitManagement({ org }: Props) {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Add Purpose Dialog */}
-      <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Purpose</DialogTitle>
-            <DialogDescription>
-              Create a new purpose of visit for your organization.
-            </DialogDescription>
-          </DialogHeader>
-          <form action={formAction}>
-            <div className="space-y-4">
-              <Input type="hidden" name="orgCode" defaultValue={org} />
-              <div>
-                <label className="text-sm font-medium mb-1 block">
-                  Purpose Name
-                </label>
-                <Input
-                  placeholder="Enter purpose name"
-                  name="name"
-                  defaultValue={state.name as string}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-1 block">
-                  Description
-                </label>
-                <Input
-                  placeholder="Enter description"
-                  name="description"
-                  defaultValue={state.description as string}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-1 block">
-                  Estimated Time (minutes)
-                </label>
-                <Input
-                  placeholder="Enter time in minutes"
-                  type="number"
-                  name="estimatedTimeInMinutes"
-                  defaultValue={state.estimated_time_in_minutes as string}
-                />
-              </div>
-              {state.error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded">
-                  <p className="text-sm text-red-600">{state.error}</p>
-                </div>
-              )}
-            </div>
-            <DialogFooter className="mt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setAddDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Adding..." : "Add Purpose"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
       {/* Purpose of Visit Management */}
       <div className="xl:col-span-1 bg-white border border-border shadow-sm overflow-hidden flex flex-col">
-        <div className="px-2 pt-2 pb-2 flex-shrink-0 border-b border-border/50 flex items-center justify-between">
+        <div className="px-2 pt-2 pb-1 flex-shrink-0">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-1">
             <ListChecks className="h-4 w-4" />
             Purposes
           </h2>
-          <Button
-            size="sm"
-            className="h-8 px-3"
-            onClick={() => setAddDialogOpen(true)}
-          >
-            <Plus className="h-3 w-3 mr-1" />
-            Add
-          </Button>
         </div>
+
+        {/* Add New Purpose */}
+        <div className="px-2 pb-2 border-b border-border/50">
+          <form action={formAction}>
+            <div className="space-y-1">
+              <Input
+                type="hidden"
+                name="orgCode"
+                defaultValue={org}
+                className="h-8 text-xs"
+              />
+              <Input
+                placeholder="Purpose name"
+                name="name"
+                defaultValue={state.name as string}
+                className="h-8 text-xs"
+              />
+              <Input
+                placeholder="Description"
+                name="description"
+                defaultValue={state.description as string}
+                className="h-8 text-xs"
+              />
+              <div className="flex gap-1">
+                <Input
+                  placeholder="Time (min)"
+                  type="number"
+                  name="estimatedTimeInMinutes"
+                  defaultValue={state.estimated_time_in_minutes as string}
+                  className="h-8 text-xs flex-1"
+                />
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="h-8 px-2"
+                  disabled={isPending}
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
+              </div>
+              <div>
+                {/* Error Message */}
+                {state.error && (
+                  <div className="p-2 bg-red-50 border border-red-200 rounded">
+                    <p className="text-sm text-red-600">{state.error}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </form>
+        </div>
+
         <div className="flex-1 overflow-y-auto px-2 py-2">
           {!data ? (
             <div className="space-y-1">

@@ -49,7 +49,7 @@ export const addPurpose = validatedAction(
       throw error;
     }
 
-    return data;
+    return { success: "success", data };
   }
 );
 
@@ -94,9 +94,8 @@ export const removePurpose = validatedAction(
         return { error: "Failed to remove purpose" };
       }
 
-      return { success: "true", message: "purpose removed successfully" };
+      return { success: "success", message: "purpose removed successfully" };
     } catch (error) {
-      console.log("Error");
       return { error: "Failed to remove purpose" };
     }
   }
