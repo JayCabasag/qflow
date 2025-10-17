@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CreateOrgData, UserOrg } from "./schema";
+import { CreateOrgData, Org, UserOrg } from "./schema";
 import { createOrg } from "@/app/dashboard/create-org/actions";
 
 export const enum OrgKeys {
@@ -22,7 +22,7 @@ const useFetchOneQuery = (org: string) => {
         throw new Error(error.message);
       }
 
-      return organization as UserOrg;
+      return organization as Org;
     },
   });
 };

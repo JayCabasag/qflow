@@ -33,15 +33,15 @@ import { ActionState } from "@/lib/auth/middleware";
 import { addStaff, removeStaff } from "@/app/dashboard/[org]/admin/actions";
 import { StaffKey, useStaff } from "@/hooks";
 import { Staff } from "@/hooks/domain/staff/schema";
-import { UserOrg } from "@/hooks/domain/org/schema";
+import { Org } from "@/hooks/domain/org/schema";
 
 interface Props {
-  org: UserOrg;
+  org: Org;
 }
 
 export function StaffQueues({ org }: Props) {
   const { useFetchAllByOrgCodeQuery, invalidateQuery } = useStaff();
-  const { data: staffs, isLoading } = useFetchAllByOrgCodeQuery(org.org_code);
+  const { data: staffs, isLoading } = useFetchAllByOrgCodeQuery(org.code);
   const staffList = staffs ?? [];
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
