@@ -105,3 +105,14 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
 
   redirect(`/auth/verify-email?email=${data.email}`);
 });
+
+// Get current user (for server components)
+export async function getCurrentUser() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return user;
+}

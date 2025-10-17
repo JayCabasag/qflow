@@ -12,10 +12,19 @@ export async function GET(
     const supabase = await createClient();
 
     const { data: purposes, error: error } = await supabase
-      .from("org_staff")
-      .select("*")
-      .eq("org_code", orgCode)
-      .order("name", { ascending: true });
+      .from("user_org")
+      .select(
+        `
+          *,
+          org:org_id (
+            code,
+            name
+          )
+        `
+      )
+      .eq("org.code", orgCode)
+      .eq("org_role", "staff")
+      .order("created_at", { ascending: true });
 
     if (error) {
       console.error("Supabase error:", error.message);

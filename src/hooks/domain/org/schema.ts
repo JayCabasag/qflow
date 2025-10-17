@@ -25,11 +25,11 @@ export type CreateOrgData = z.infer<typeof createOrgSchema>;
 export const OrgSchema = z
   .object({
     id: z.number().int().nonnegative(),
-    code: z.string().min(1),
-    name: z.string().min(1),
-    industry: z.string().nullable().optional(), // industry may be null or missing
-    description: z.string().nullable(), // explicit null or string
-    logo: z.string().nullable(), // explicit null or string (e.g. URL or base64)
+    org_code: z.string().min(1),
+    org_name: z.string().min(1),
+    org_industry: z.string().nullable().optional(), // industry may be null or missing
+    org_scription: z.string().nullable(), // explicit null or string
+    org_logo: z.string().nullable(), // explicit null or string (e.g. URL or base64)
     created_at: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
       message: "created_at must be a valid ISO timestamp string",
     }),
@@ -46,17 +46,21 @@ export const OrgSchema = z
 export const UserOrgSchema = z
   .object({
     id: z.number().int().nonnegative(),
-    user_id: z.string().uuid(),
-    org_id: z.number().int().nonnegative(),
-    org_role: z.enum(["admin", "member", "viewer"]),
+    org_code: z.string().min(1),
+    org_name: z.string().min(1),
+    org_industry: z.string().nullable().optional(),
+    org_scription: z.string().nullable(),
+    org_logo: z.string().nullable(),
     created_at: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
       message: "created_at must be a valid ISO timestamp string",
     }),
-    // embedded organization (as you provided)
-    org: OrgSchema,
+    updated_at: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
+      message: "updated_at must be a valid ISO timestamp string",
+    }),
+    org_role: z.string(),
   })
   .strict();
 
 /** Types */
-export type Org = z.infer<typeof OrgSchema>;
+// export type Org = z.infer<typeof OrgSchema>;
 export type UserOrg = z.infer<typeof UserOrgSchema>;

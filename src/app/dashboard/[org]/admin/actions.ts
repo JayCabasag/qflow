@@ -58,52 +58,52 @@ const removePurposeSchema = z.object({
 export const removePurpose = validatedAction(
   removePurposeSchema,
   async (formData) => {
-    try {
-      const { id } = formData;
+    const { id } = formData;
 
-      const supabase = await createClient();
+    const supabase = await createClient();
 
-      const { data, error } = await supabase
-        .from("purpose")
-        .delete()
-        .eq("id", id)
-        .select();
+    const { data, error } = await supabase
+      .from("purpose")
+      .delete()
+      .eq("id", id)
+      .select();
 
-      if (error) {
-        return { error: error.message };
-      }
+    if (error) {
+      return { error: error.message };
+    }
 
-      if (data.length <= 0) {
-        return { error: "Failed to remove purpose" };
-      }
-
-      return { success: "success", message: "purpose removed successfully" };
-    } catch (error) {
+    if (data.length <= 0) {
       return { error: "Failed to remove purpose" };
     }
+
+    return { success: "success", message: "purpose removed successfully" };
   }
 );
 
 const addStaffSchema = z.object({
-  orgCode: z.string(),
+  orgId: z.coerce.number(),
   userId: z.string().min(3, "Invalid user id.".trim()),
   name: z.string().min(1, "Staff name is required").trim(),
   assign: z.string().min(1, "Assign is required"),
+  role: z.enum(["admin", "staff"] as const, {
+    message: "Role must be either admin or staff",
+  }),
 });
 
 export const addStaff = validatedAction(addStaffSchema, async (formData) => {
-  const { orgCode, userId, name, assign } = formData;
+  const { orgId, userId, name, assign, role } = formData;
 
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("org_staff")
+    .from("user_org")
     .insert({
-      org_code: orgCode,
+      org_id: orgId,
       user_id: userId,
       name,
       assign,
       status: "active",
+      org_role: role,
     })
     .select()
     .single();
@@ -111,7 +111,7 @@ export const addStaff = validatedAction(addStaffSchema, async (formData) => {
   if (error) {
     return {
       error: error.message,
-      orgCode,
+      orgId,
       name,
       userId,
       assign,
@@ -133,7 +133,7 @@ export const removeStaff = validatedAction(
     const supabase = await createClient();
 
     const { data, error } = await supabase
-      .from("org_staff")
+      .from("user_org")
       .delete()
       .eq("id", id)
       .select();

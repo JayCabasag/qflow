@@ -25,9 +25,10 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { toast } from "sonner";
+import { UserOrg } from "@/hooks/domain/org/schema";
 
 interface Props {
-  org: string;
+  org: UserOrg;
 }
 
 export default function PurposeVisitManagement({ org }: Props) {
@@ -40,7 +41,7 @@ export default function PurposeVisitManagement({ org }: Props) {
     name: string;
   } | null>(null);
   const { useFetchManyByOrgQuery, invalidateQuery } = usePurpose();
-  const { data } = useFetchManyByOrgQuery(org);
+  const { data } = useFetchManyByOrgQuery(org.org_code);
   const purposeList: Purpose[] = data ?? [];
 
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
@@ -124,7 +125,7 @@ export default function PurposeVisitManagement({ org }: Props) {
           </DialogHeader>
           <form action={formAction}>
             <div className="space-y-4">
-              <Input type="hidden" name="orgCode" defaultValue={org} />
+              <Input type="hidden" name="orgCode" defaultValue={org.org_code} />
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   Purpose Name

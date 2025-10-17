@@ -33,19 +33,21 @@ import { ActionState } from "@/lib/auth/middleware";
 import { addStaff, removeStaff } from "@/app/dashboard/[org]/admin/actions";
 import { StaffKey, useStaff } from "@/hooks";
 import { Staff } from "@/hooks/domain/staff/schema";
+import { UserOrg } from "@/hooks/domain/org/schema";
 
 interface Props {
-  org: string;
+  org: UserOrg;
 }
 
 export function StaffQueues({ org }: Props) {
   const { useFetchAllByOrgCodeQuery, invalidateQuery } = useStaff();
-  const { data: staffs, isLoading } = useFetchAllByOrgCodeQuery(org);
+  const { data: staffs, isLoading } = useFetchAllByOrgCodeQuery(org.org_code);
   const staffList = staffs ?? [];
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [staffToRemove, setStaffToRemove] = useState<Staff | null>(null);
+  const roleOptions = ["admin", "staff"];
 
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
     addStaff,
@@ -110,7 +112,12 @@ export function StaffQueues({ org }: Props) {
 
           <form action={formAction}>
             <div className="space-y-4">
-              <Input hidden name="orgCode" defaultValue={org} />
+              <Input
+                hidden
+                type="number"
+                name="orgId"
+                defaultValue={org.id as number}
+              />
               <div>
                 <label className="text-sm font-medium mb-2 block">
                   User ID
@@ -146,6 +153,25 @@ export function StaffQueues({ org }: Props) {
                   defaultValue={state.assign as string}
                   required
                 />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Role</label>
+                <Select
+                  name="role"
+                  defaultValue={state.role as string}
+                  required
+                >
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roleOptions.map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role.charAt(0).toUpperCase() + role.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             {state.error && (

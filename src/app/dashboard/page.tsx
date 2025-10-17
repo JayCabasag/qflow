@@ -6,9 +6,12 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { getCurrentUser } from "../auth/actions";
 
 export default async function DashboardPage() {
   const queryClient = new QueryClient();
+
+  const user = await getCurrentUser();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -21,7 +24,7 @@ export default async function DashboardPage() {
             Select an organization to manage queues and view analytics
           </p>
         </div>
-        <OrgList />
+        {user && <OrgList userId={user.id} />}
       </main>
     </HydrationBoundary>
   );

@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CreateOrgData, Org } from "./schema";
+import { CreateOrgData, UserOrg } from "./schema";
 import { createOrg } from "@/app/dashboard/create-org/actions";
 
 export const enum OrgKeys {
@@ -22,23 +22,23 @@ const useFetchOneQuery = (org: string) => {
         throw new Error(error.message);
       }
 
-      return organization;
+      return organization as UserOrg;
     },
   });
 };
 
-const useFetchManyQuery = () => {
+const useFetchAllByUserIdQuery = (userId: string) => {
   return useQuery({
     queryKey: [OrgKeys.fetchAllUserOrgs],
     queryFn: async () => {
-      const response = await fetch("/api/orgs");
+      const response = await fetch(`/api/users/${userId}/orgs`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch organizations");
       }
 
       const orgs = await response.json();
-      return orgs as Org[];
+      return orgs as UserOrg[];
     },
   });
 };
@@ -64,5 +64,5 @@ const useCreateOrgMutation = () => {
 };
 
 export const useOrg = () => {
-  return { useFetchOneQuery, useCreateOrgMutation, useFetchManyQuery };
+  return { useFetchOneQuery, useCreateOrgMutation, useFetchAllByUserIdQuery };
 };

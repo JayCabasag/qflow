@@ -5,10 +5,14 @@ import { Building2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { OrgCard } from "./org-card";
 
-export const OrgList = () => {
+interface Props {
+  userId: string;
+}
+
+export const OrgList = ({ userId }: Props) => {
   const router = useRouter();
-  const { useFetchManyQuery } = useOrg();
-  const { data, isLoading } = useFetchManyQuery();
+  const { useFetchAllByUserIdQuery } = useOrg();
+  const { data, isLoading } = useFetchAllByUserIdQuery(userId);
   const orgs = data ?? [];
 
   if (isLoading) {
@@ -17,7 +21,6 @@ export const OrgList = () => {
         <div className="mb-6">
           <div className="h-10 w-56 bg-gray-200 animate-pulse rounded"></div>
         </div>
-        ;
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
             <div
@@ -60,7 +63,7 @@ export const OrgList = () => {
             key={org.id}
             org={org}
             handleOnViewOrg={() =>
-              router.push(`/dashboard/${org.code}/${org.org_role}`)
+              router.push(`/dashboard/${org.org_code}/${org.org_role}`)
             }
           />
         ))}
