@@ -88,7 +88,7 @@ export function StaffBoard({ org }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-4 gap-3 h-auto lg:h-[calc(100vh-200px)]">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-3 h-auto lg:h-[calc(100vh-200px)]">
         {/* Currently Serving - 2/4 of screen */}
         <div className="lg:col-span-2 bg-white border border-border shadow-sm overflow-hidden flex flex-col">
           <div className="flex flex-row items-center justify-between pb-1 px-3 pt-3 flex-shrink-0">

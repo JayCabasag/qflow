@@ -2,7 +2,6 @@
 
 import { validatedAction } from "@/lib/auth/middleware";
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const addPurposeSchema = z.object({
@@ -21,7 +20,6 @@ export const addPurpose = validatedAction(
 
     const supabase = await createClient();
 
-    // Just insert normally - sort_order is auto-set by the trigger!
     const { data, error } = await supabase
       .from("purpose")
       .insert({
@@ -53,21 +51,6 @@ export const addPurpose = validatedAction(
   }
 );
 
-export async function togglePurposeStatus(purposeId: string) {
-  try {
-    // TODO: Toggle status in database
-    // await db.purpose.update({
-    //   where: { id: purposeId },
-    //   data: { isActive: !current.isActive }
-    // })
-
-    revalidatePath("/your-path");
-    return { success: true };
-  } catch (error) {
-    return { error: "Failed to toggle purpose status" };
-  }
-}
-
 const removePurposeSchema = z.object({
   id: z.string(),
 });
@@ -97,6 +80,76 @@ export const removePurpose = validatedAction(
       return { success: "success", message: "purpose removed successfully" };
     } catch (error) {
       return { error: "Failed to remove purpose" };
+    }
+  }
+);
+
+const addStaffSchema = z.object({
+  orgCode: z.string(),
+  userId: z.string().min(3, "Invalid user id.".trim()),
+  name: z.string().min(1, "Staff name is required").trim(),
+  assign: z.string().min(1, "Assign is required"),
+});
+
+export const addStaff = validatedAction(addStaffSchema, async (formData) => {
+  const { orgCode, userId, name, assign } = formData;
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("org_staff")
+    .insert({
+      org_code: orgCode,
+      user_id: userId,
+      name,
+      assign,
+      status: "active",
+    })
+    .select()
+    .single();
+
+  if (error) {
+    return {
+      error: error.message,
+      orgCode,
+      name,
+      userId,
+      assign,
+    };
+  }
+
+  return { success: "success", data };
+});
+
+const removeStaffSchema = z.object({
+  id: z.string(),
+});
+
+export const removeStaff = validatedAction(
+  removeStaffSchema,
+  async (formData) => {
+    try {
+      const { id } = formData;
+
+      const supabase = await createClient();
+
+      const { data, error } = await supabase
+        .from("org_staff")
+        .delete()
+        .eq("id", id)
+        .select();
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      if (data.length <= 0) {
+        return { error: "Failed to remove staff" };
+      }
+
+      return { success: "success", message: "staff removed successfully" };
+    } catch (error) {
+      return { error: "Failed to remove staff" };
     }
   }
 );

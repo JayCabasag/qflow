@@ -22,91 +22,11 @@ interface Props {
   org: string;
 }
 
-interface Announcement {
-  id: string;
-  title: string;
-  message: string;
-  type: "info" | "warning" | "success" | "alert";
-  timestamp: string;
-  dismissible?: boolean;
-}
-
 export default function AdminBoard({ org }: Props) {
-  const [dismissed, setDismissed] = useState<string[]>([]);
-
-  const announcements: Announcement[] = [
-    {
-      id: "1",
-      title: "System Maintenance",
-      message: "System will be down for maintenance on Sunday 2-4 AM",
-      type: "alert",
-      timestamp: "2 hours ago",
-      dismissible: true,
-    },
-    {
-      id: "2",
-      title: "New Feature Released",
-      message: "Check out our new advanced reporting dashboard",
-      type: "success",
-      timestamp: "1 day ago",
-      dismissible: true,
-    },
-    {
-      id: "3",
-      title: "Queue Alert",
-      message: "Current wait time exceeds average by 15 minutes",
-      type: "warning",
-      timestamp: "30 min ago",
-      dismissible: true,
-    },
-  ];
-
-  const handleDismiss = (id: string) => {
-    setDismissed([...dismissed, id]);
-  };
-
-  const getIconAndColor = (type: string) => {
-    switch (type) {
-      case "alert":
-        return {
-          icon: AlertCircle,
-          bgColor: "bg-red-50",
-          borderColor: "border-red-200",
-          textColor: "text-red-600",
-        };
-      case "success":
-        return {
-          icon: CheckCircle,
-          bgColor: "bg-green-50",
-          borderColor: "border-green-200",
-          textColor: "text-green-600",
-        };
-      case "warning":
-        return {
-          icon: AlertCircle,
-          bgColor: "bg-yellow-50",
-          borderColor: "border-yellow-200",
-          textColor: "text-yellow-600",
-        };
-      default:
-        return {
-          icon: Info,
-          bgColor: "bg-blue-50",
-          borderColor: "border-blue-200",
-          textColor: "text-blue-600",
-        };
-    }
-  };
-
-  const visibleAnnouncements = announcements.filter(
-    (a) => !dismissed.includes(a.id)
-  );
-
   return (
     <div className="grid lg:grid-cols-4 gap-6">
-      <StaffQueues />
+      <StaffQueues org={org} />
       <div className="flex flex-col gap-6">
-        {/* Organization Metrics */}
         <div className="bg-white shadow-sm">
           <div className="px-3 py-2 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900 text-xs">

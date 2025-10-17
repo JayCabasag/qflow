@@ -1,18 +1,11 @@
 import { ListChecks, Plus, Trash2 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import {
-  useActionState,
-  useEffect,
-  useTransition,
-  useState,
-  useRef,
-} from "react";
+import { useActionState, useEffect, useTransition, useState } from "react";
 import { addPurpose, removePurpose } from "@/app/dashboard/[org]/admin/actions";
 import { ActionState } from "@/lib/auth/middleware";
 import { PurposeKey, usePurpose } from "@/hooks";
 import { Purpose } from "@/hooks/domain/purpose/schema";
-import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +15,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import {
   Dialog,
@@ -31,8 +23,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "./ui/dialog";
+import { toast } from "sonner";
 
 interface Props {
   org: string;
@@ -65,6 +57,7 @@ export default function PurposeVisitManagement({ org }: Props) {
     if (!isPending && state.success == "success") {
       invalidateQuery([PurposeKey.fetchManyByOrgQuery]);
       setAddDialogOpen(false);
+      toast.success("Purpose added successfully");
       state.success = "";
     }
   }, [isPending, state, invalidateQuery]);
@@ -74,6 +67,7 @@ export default function PurposeVisitManagement({ org }: Props) {
       invalidateQuery([PurposeKey.fetchManyByOrgQuery]);
       setDeleteDialogOpen(false);
       setSelectedPurpose(null);
+      toast.success("Purpose removed successfully");
       removeState.success = "";
     }
   }, [isRemoving, removeState, invalidateQuery]);

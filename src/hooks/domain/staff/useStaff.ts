@@ -1,74 +1,36 @@
 import { supabase } from "@/lib/supabaseClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { StaffSignUpData } from "./schema";
-import { toast } from "sonner";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Staff } from "./schema";
 
-// Query Keys
-export const enum StaffKeys {
-  fetchStaff = "fetchStaff",
-  fetchStaffById = "fetchStaffById",
-  fetchStaffRequests = "fetchStaffRequests",
+export const enum StaffKey {
+  fetchAllByOrgCodeQuery = "fetchAllStaffByOrgCode",
 }
 
-// Hook for staff sign up
-export function useStaffSignUpMutation() {
-  const queryClient = useQueryClient();
+export function useFetchAllByOrgCodeQuery(orgCode: string) {
+  return useQuery({
+    queryKey: [StaffKey.fetchAllByOrgCodeQuery, orgCode], // Include org in the query key for proper caching
+    queryFn: async () => {
+      const response = await fetch(`/api/orgs/${orgCode}/staffs`);
 
-  return useMutation({
-    mutationFn: async (signUpData: StaffSignUpData) => {
-      const { data, error } = await supabase.auth.signUp({
-        email: signUpData.email,
-        password: signUpData.password,
-        options: {
-          data: {
-            name: signUpData.name,
-            alias: signUpData.alias,
-            org_code: signUpData.organizationCode,
-          },
-          //   emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) {
-        throw new Error(error.message);
+      if (!response.ok) {
+        throw new Error("Failed to fetch organization purposes");
       }
 
-      // Create staff record in your staff table
-      if (data.user) {
-        const { error: staffError } = await supabase.from("user").insert({
-          id: data.user.id,
-          email: signUpData.email,
-          name: signUpData.name,
-          alias: signUpData.alias,
-          org_code: signUpData.organizationCode,
-          status: "pending",
-        });
-
-        if (staffError) {
-          throw new Error(staffError.message);
-        }
-      }
-
-      return data;
+      const data = await response.json();
+      return data.purposes as Staff[];
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [StaffKeys.fetchStaff] });
-      queryClient.invalidateQueries({
-        queryKey: [StaffKeys.fetchStaffRequests],
-      });
-
-      toast.success("Staff Sign Up Successful", {
-        description: "A verification email has been sent.",
-      });
-    },
-    onError: (error: Error) => {
-      toast.error("Sign Up Failed", {
-        description: error.message,
-      });
-    },
+    enabled: !!orgCode,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 }
 
 export const useStaff = () => {
-  return { useStaffSignUpMutation };
+  const client = useQueryClient();
+  const invalidateQuery = (queryKeys: StaffKey[]) =>
+    client.invalidateQueries({
+      queryKey: queryKeys,
+    });
+
+  return { useFetchAllByOrgCodeQuery, invalidateQuery };
 };
