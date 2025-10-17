@@ -198,7 +198,7 @@ export default function SignupPage() {
                       type="checkbox"
                       name="terms"
                       id="terms"
-                      value="true"
+                      defaultChecked={state.terms === "on"}
                       required
                       className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
@@ -220,7 +220,7 @@ export default function SignupPage() {
                     type="checkbox"
                     name="marketingOptIn"
                     id="marketing"
-                    value="true"
+                    defaultChecked={state.marketingOptIn === "on"}
                     className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                   />
                   <label htmlFor="marketing" className="text-sm text-gray-600">
@@ -248,7 +248,7 @@ export default function SignupPage() {
                 <p className="text-sm text-gray-600">
                   Already have an account?{" "}
                   <Link
-                    href="/auth/sigin"
+                    href="/auth/signin"
                     className="text-green-600 font-medium hover:underline"
                   >
                     Sign in

@@ -51,8 +51,14 @@ const signUpSchema = z
       .string()
       .min(2, "Alias must be at least 2 characters")
       .max(100, "Alias must not exceed 100 characters"),
-    terms: z.string(), // Just accept string, no transform
-    marketingOptIn: z.string().optional(),
+    terms: z
+      .string()
+      .optional()
+      .transform((val) => val === "on"),
+    marketingOptIn: z
+      .string()
+      .optional()
+      .transform((val) => val === "on"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
