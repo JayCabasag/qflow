@@ -23,7 +23,7 @@ interface Props {
   user: User | null;
 }
 
-export function AdminNavbar({ user, email, notifications }: Props) {
+export function AdminNavbar({ user, email }: Props) {
   const { useSignOutMutation } = useAuth();
   const signOutMutation = useSignOutMutation();
 

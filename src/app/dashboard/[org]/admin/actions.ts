@@ -70,7 +70,7 @@ export const removePurpose = validatedAction(
         .select();
 
       if (error) {
-        return { error: "Failed to remove purpose" };
+        return { error: error.message };
       }
 
       if (data.length <= 0) {
@@ -128,28 +128,24 @@ const removeStaffSchema = z.object({
 export const removeStaff = validatedAction(
   removeStaffSchema,
   async (formData) => {
-    try {
-      const { id } = formData;
+    const { id } = formData;
 
-      const supabase = await createClient();
+    const supabase = await createClient();
 
-      const { data, error } = await supabase
-        .from("org_staff")
-        .delete()
-        .eq("id", id)
-        .select();
+    const { data, error } = await supabase
+      .from("org_staff")
+      .delete()
+      .eq("id", id)
+      .select();
 
-      if (error) {
-        return { error: error.message };
-      }
+    if (error) {
+      return { error: error.message };
+    }
 
-      if (data.length <= 0) {
-        return { error: "Failed to remove staff" };
-      }
-
-      return { success: "success", message: "staff removed successfully" };
-    } catch (error) {
+    if (data.length <= 0) {
       return { error: "Failed to remove staff" };
     }
+
+    return { success: "success", message: "staff removed successfully" };
   }
 );

@@ -94,7 +94,7 @@ export default function PurposeVisitManagement({ org }: Props) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Delete "{selectedPurpose?.name}"?
+              {`Delete "${selectedPurpose?.name}"?`}
             </AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the

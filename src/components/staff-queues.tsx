@@ -1,4 +1,4 @@
-import { Plus, Trash2, Users, X, Loader2 } from "lucide-react";
+import { Plus, Trash2, Users, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";

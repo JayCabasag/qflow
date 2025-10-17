@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabaseClient";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Staff } from "./schema";
 
