@@ -1,7 +1,7 @@
-"use client";
-
+import { getCurrentUser } from "@/app/auth/actions";
 import { CreateOrgForm } from "@/components/create-org-form";
-export default function CreateOrgPage() {
+export default async function CreateOrgPage() {
+  const user = await getCurrentUser();
   return (
     <main className="flex-1 max-w-7xl mx-auto px-4 py-6 w-full">
       <div className="mb-4">
@@ -14,7 +14,7 @@ export default function CreateOrgPage() {
       </div>
 
       {/* Form Card */}
-      <CreateOrgForm />
+      <CreateOrgForm user={user} />
     </main>
   );
 }

@@ -1,61 +1,57 @@
 "use server";
 
+import { validatedAction } from "@/lib/auth/middleware";
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import z from "zod";
 
-type CreateOrgData = {
-  name: string;
-  code: string;
-  description?: string;
-  industry: string;
-  logo?: string;
-};
+const createOrgSchema = z.object({
+  logo: z.string().nullable(),
+  code: z.string().min(1, "Org code is required").trim(),
+  name: z.string().min(1, "Purpose name is required").trim(),
+  industry: z.string().min(1, "Purpose name is required").trim(),
+  description: z.string().min(1, "Description is required").trim(),
+});
 
-export async function createOrg(data: CreateOrgData) {
+export const createOrg = validatedAction(createOrgSchema, async (formData) => {
+  const { logo, code, name, industry, description } = formData;
+
   const supabase = await createClient();
 
-  // Check if user is authenticated
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { error: "You must be authenticated to create an organization" };
-  }
-
-  // Check if organization code already exists
   const { data: existingOrg } = await supabase
     .from("org")
     .select("code")
-    .eq("code", data.code)
+    .eq("code", code)
     .single();
 
   if (existingOrg) {
     return { error: "Organization code is already taken" };
   }
 
-  // Insert the new organization
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("org")
     .insert({
-      name: data.name,
-      code: data.code,
-      description: data.description || null,
-      industry: data.industry,
-      logo: data.logo || null,
+      name: name,
+      code: code,
+      description: description || null,
+      industry: industry || null,
+      logo: logo || null,
     })
     .select()
     .single();
 
   if (error) {
-    return { error: error.message };
+    return {
+      error: error.message,
+      logo,
+      code,
+      name,
+      industry,
+      description,
+    };
   }
 
-  revalidatePath("/", "layout");
-  redirect("/dashboard");
-}
+  return { success: "success", data };
+});
 
 export async function getUserOrgs() {
   const supabase = await createClient();

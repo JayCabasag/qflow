@@ -68,8 +68,6 @@ export function StaffQueues({ org }: Props) {
     }
   }, [isPending, state, invalidateQuery]);
 
-  console.log(removeState.error);
-
   useEffect(() => {
     if (!isRemoving && removeState.success == "success") {
       invalidateQuery([StaffKey.fetchAllByOrgCodeQuery]);

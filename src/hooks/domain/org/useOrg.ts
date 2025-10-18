@@ -1,11 +1,11 @@
 import { supabase } from "@/lib/supabaseClient";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CreateOrgData, Org, UserOrg } from "./schema";
 import { createOrg } from "@/app/dashboard/create-org/actions";
 
 export const enum OrgKeys {
   fetchOne = "fetchOneOrg",
-  fetchAllUserOrgs = "fetchAllUserOrgs",
+  fetchAllByUserIdQuery = "fetchAllByUserIdQuery",
 }
 
 const useFetchOneQuery = (org: string) => {
@@ -29,7 +29,7 @@ const useFetchOneQuery = (org: string) => {
 
 const useFetchAllByUserIdQuery = (userId: string) => {
   return useQuery({
-    queryKey: [OrgKeys.fetchAllUserOrgs],
+    queryKey: [OrgKeys.fetchAllByUserIdQuery],
     queryFn: async () => {
       const response = await fetch(`/api/users/${userId}/orgs`);
 
@@ -38,31 +38,19 @@ const useFetchAllByUserIdQuery = (userId: string) => {
       }
 
       const orgs = await response.json();
+      console.log("ORGSSS", orgs);
       return orgs as UserOrg[];
     },
   });
 };
 
-const useCreateOrgMutation = () => {
-  return useMutation({
-    mutationFn: async (createOrgData: CreateOrgData) => {
-      const result = await createOrg({
-        name: createOrgData.name,
-        code: createOrgData.code,
-        description: createOrgData.description,
-        industry: createOrgData.industry,
-        logo: createOrgData.logo,
-      });
-
-      if (result?.error) {
-        throw new Error(result.error);
-      }
-
-      return result;
-    },
-  });
-};
-
 export const useOrg = () => {
-  return { useFetchOneQuery, useCreateOrgMutation, useFetchAllByUserIdQuery };
+  const client = useQueryClient();
+
+  const invalidateQuery = (queryKeys: OrgKeys[]) =>
+    client.invalidateQueries({
+      queryKey: queryKeys,
+    });
+
+  return { useFetchOneQuery, invalidateQuery, useFetchAllByUserIdQuery };
 };

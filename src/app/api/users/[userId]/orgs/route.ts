@@ -26,8 +26,15 @@ export async function GET(request: Request, context: Context) {
     }
 
     const { data: orgs, error } = await supabase
-      .from("user_orgs_view")
-      .select("*")
+      .from("user_org")
+      .select(
+        `*,          
+        org:org_id (
+          code,
+          name,
+          logo
+        )`
+      )
       .eq("user_id", userId);
 
     if (error) {

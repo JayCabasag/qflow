@@ -63,7 +63,7 @@ export const OrgList = ({ userId }: Props) => {
             key={org.id}
             org={org}
             handleOnViewOrg={() =>
-              router.push(`/dashboard/${org.org_code}/${org.org_role}`)
+              router.push(`/dashboard/${org.org.code}/${org.org_role}`)
             }
           />
         ))}

@@ -22,6 +22,13 @@ export const createOrgSchema = z.object({
 
 export type CreateOrgData = z.infer<typeof createOrgSchema>;
 
+export const UserSchema = z
+  .object({
+    id: z.string(),
+    name: z.string().min(1),
+  })
+  .strict();
+
 export const OrgSchema = z
   .object({
     id: z.number().int().nonnegative(),
@@ -45,19 +52,17 @@ export const OrgSchema = z
  */
 export const UserOrgSchema = z
   .object({
-    id: z.number().int().nonnegative(),
-    org_code: z.string().min(1),
-    org_name: z.string().min(1),
-    org_industry: z.string().nullable().optional(),
-    org_scription: z.string().nullable(),
-    org_logo: z.string().nullable(),
-    created_at: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
-      message: "created_at must be a valid ISO timestamp string",
-    }),
-    updated_at: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
-      message: "updated_at must be a valid ISO timestamp string",
-    }),
+    id: z.number(),
+    user_id: z.string(),
+    org_id: z.number(),
     org_role: z.string(),
+    name: z.string().nullable(),
+    assign: z.string().nullable(),
+    status: z.string().nullable(),
+    created_at: z.string().nullable(),
+    updated_at: z.string().nullable(),
+    org: OrgSchema,
+    user: UserSchema,
   })
   .strict();
 

@@ -14,11 +14,11 @@ export const OrgCard = ({ org, handleOnViewOrg }: Props) => {
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 bg-green-50 flex items-center justify-center text-2xl">
-              {org.org_logo}
+              {org.org.logo}
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 text-lg">
-                {org.org_name}
+                {org.org.name}
               </h3>
               <span
                 className={`inline-block px-2 py-0.5 text-xs font-medium mt-1 capitalize ${

@@ -18,7 +18,8 @@ export async function GET(
           *,
           org:org_id (
             code,
-            name
+            name,
+            logo
           )
         `
       )
