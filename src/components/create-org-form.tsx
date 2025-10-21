@@ -44,12 +44,12 @@ export function CreateOrgForm({ user }: Props) {
 
   useEffect(() => {
     if (!isPending && state.success == "success") {
-      [OrgKeys.fetchAllByUserIdQuery];
+      invalidateQuery([OrgKeys.fetchAllByUserIdQuery]);
       toast.success("Purpose added successfully");
       state.success = "";
       router.back();
     }
-  }, [isPending, state, invalidateQuery]);
+  }, [isPending, router, state, invalidateQuery]);
 
   const checkCodeAvailability = async (code: string) => {
     if (code.length < 3) {
@@ -259,7 +259,6 @@ export function CreateOrgForm({ user }: Props) {
                 <ul className="text-xs text-blue-700 space-y-1 ml-4 list-disc">
                   <li>Your organization will be created</li>
                   <li>{`You'll be assigned as the primary admin`}</li>
-                  <li>Start with a 14-day free trial</li>
                   <li>Invite team members anytime</li>
                 </ul>
               </div>

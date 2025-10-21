@@ -39,9 +39,9 @@ interface Props {
   org: Org;
 }
 
-export function StaffQueues({ org }: Props) {
-  const { useFetchAllByOrgCodeQuery, invalidateQuery } = useStaff();
-  const { data: staffs, isLoading } = useFetchAllByOrgCodeQuery(org.code);
+export function StaffList({ org }: Props) {
+  const { useFetchAllStaffsByOrgCodeQuery, invalidateQuery } = useStaff();
+  const { data: staffs, isLoading } = useFetchAllStaffsByOrgCodeQuery(org.code);
   const staffList = staffs ?? [];
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -61,7 +61,7 @@ export function StaffQueues({ org }: Props) {
 
   useEffect(() => {
     if (!isPending && state.success == "success") {
-      invalidateQuery([StaffKey.fetchAllByOrgCodeQuery]);
+      invalidateQuery([StaffKey.fetchAllStaffsByOrgCodeQuery]);
       setAddDialogOpen(false);
       toast.success("Staff added successfully");
       state.success = "";
@@ -70,7 +70,7 @@ export function StaffQueues({ org }: Props) {
 
   useEffect(() => {
     if (!isRemoving && removeState.success == "success") {
-      invalidateQuery([StaffKey.fetchAllByOrgCodeQuery]);
+      invalidateQuery([StaffKey.fetchAllStaffsByOrgCodeQuery]);
       setRemoveDialogOpen(false);
       setStaffToRemove(null);
       toast.success("Staff removed successfully");
@@ -130,7 +130,7 @@ export function StaffQueues({ org }: Props) {
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">
-                  Staff User Name
+                  Staff Name
                 </label>
                 <Input
                   placeholder="Enter staff name"
@@ -193,7 +193,7 @@ export function StaffQueues({ org }: Props) {
                     Adding...
                   </>
                 ) : (
-                  "Add Staff"
+                  "Add"
                 )}
               </Button>
             </DialogFooter>
@@ -245,9 +245,9 @@ export function StaffQueues({ org }: Props) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="md:col-span-2 bg-white border border-border shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white border border-border shadow-sm overflow-hidden flex flex-col">
         <div className="flex flex-row items-center justify-between pb-1 px-3 pt-3 flex-shrink-0">
-          <h2 className="text-lg font-bold text-foreground">Staff & Queues</h2>
+          <h2 className="text-lg font-bold text-foreground">Staffs</h2>
           <Button onClick={() => setAddDialogOpen(true)} disabled={isLoading}>
             <Plus />
             Add staff

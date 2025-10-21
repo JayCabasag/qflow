@@ -24,7 +24,14 @@ export const createOrg = validatedAction(createOrgSchema, async (formData) => {
     .single();
 
   if (existingOrg) {
-    return { error: "Organization code is already taken" };
+    return {
+      error: "Organization code is already taken",
+      logo,
+      code,
+      name,
+      industry,
+      description,
+    };
   }
 
   const { data, error } = await supabase
@@ -52,19 +59,3 @@ export const createOrg = validatedAction(createOrgSchema, async (formData) => {
 
   return { success: "success", data };
 });
-
-export async function getUserOrgs() {
-  const supabase = await createClient();
-
-  // Check if user is authenticated
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
-
-  const { data, error } = await supabase.from("user_orgs_view").select("*");
-
-  if (error) throw error;
-
-  return data;
-}

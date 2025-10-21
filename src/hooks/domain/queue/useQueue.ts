@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseClient";
 import { QueueItem, QueuesStats } from "@/types";
+import { supabase } from "@/lib/supabase/client";
 
 export const enum QueuesKey {
   fetchQueues = "fetchQueues",
@@ -10,7 +10,7 @@ export const enum QueuesKey {
 
 export function useFetchQueues(org: string) {
   return useQuery({
-    queryKey: [QueuesKey.fetchQueues, org], // Include org in the query key for proper caching
+    queryKey: [QueuesKey.fetchQueues, org],
     queryFn: async () => {
       const { data: queues, error } = await supabase
         .from("queue")

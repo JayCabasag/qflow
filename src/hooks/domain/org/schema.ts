@@ -35,7 +35,7 @@ export const OrgSchema = z
     code: z.string().min(1),
     name: z.string().min(1),
     industry: z.string().nullable().optional(), // industry may be null or missing
-    scription: z.string().nullable(), // explicit null or string
+    description: z.string().nullable(), // explicit null or string
     logo: z.string().nullable(), // explicit null or string (e.g. URL or base64)
     created_at: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
       message: "created_at must be a valid ISO timestamp string",
@@ -44,6 +44,7 @@ export const OrgSchema = z
       message: "updated_at must be a valid ISO timestamp string",
     }),
     org_role: z.string(),
+    status: z.string(),
   })
   .strict();
 

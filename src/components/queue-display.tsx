@@ -134,7 +134,7 @@ export function QueueDisplay({ org }: Props) {
           <div className="px-2 pb-2 flex-shrink-0">
             <div className="bg-gradient-to-r from-green-50 to-green-100 border border-border p-2">
               <div className="text-center">
-                <div className="w-40 h-40 bg-white shadow-sm flex items-center justify-center mb-1 mx-auto">
+                <div className="w-38 h-38 p-4 bg-white shadow-sm flex items-center justify-center mb-1 mx-auto">
                   <Image
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
                       `${baseUrl}/${org}/join`

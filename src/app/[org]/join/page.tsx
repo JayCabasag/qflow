@@ -1,5 +1,13 @@
-import { RegistrationForm } from "@/components/registration-form";
-import { supabase } from "@/lib/supabaseClient";
+"use server";
+
+import { JoinQueue } from "@/components/join-queue";
+import { OrgNotReady } from "@/components/org-not-ready";
+import { supabase } from "@/lib/supabase/client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 interface JoinPageProps {
   params: { org: string };
@@ -8,26 +16,28 @@ interface JoinPageProps {
 
 export default async function JoinPage({ params }: JoinPageProps) {
   const { org } = await params;
+  const queryClient = new QueryClient();
 
-  const { data: staffs, error: staffError } = await supabase
-    .from("staff")
+  const { data: orgData, error } = await supabase
+    .from("org")
     .select("*")
-    .eq("org_code", org)
-    .order("name", { ascending: true });
+    .eq("code", org)
+    .maybeSingle();
 
-  const { data: purposes, error: purposeError } = await supabase
-    .from("purpose")
-    .select("*")
-    .eq("org_code", org)
-    .order("name", { ascending: true });
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchOneOrg", org],
+    queryFn: async () => {
+      return orgData;
+    },
+  });
 
-  if (staffError) {
-    return <div>No staffs set</div>;
+  if (error || !orgData || orgData.status != "active") {
+    return <OrgNotReady />;
   }
 
-  if (purposeError) {
-    return <div>No purpose set</div>;
-  }
-
-  return <RegistrationForm org={org} staffs={staffs} purposes={purposes} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <JoinQueue org={org} />
+    </HydrationBoundary>
+  );
 }

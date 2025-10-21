@@ -21,7 +21,7 @@ export const addPurpose = validatedAction(
     const supabase = await createClient();
 
     const { data, error } = await supabase
-      .from("purpose")
+      .from("ticket_purpose")
       .insert({
         org_code: orgCode,
         name: name,
@@ -63,7 +63,7 @@ export const removePurpose = validatedAction(
     const supabase = await createClient();
 
     const { data, error } = await supabase
-      .from("purpose")
+      .from("ticket_purpose")
       .delete()
       .eq("id", id)
       .select();

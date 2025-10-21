@@ -16,7 +16,7 @@ export async function GET(
       .select(
         `
           *,
-          org:org_id (
+          org:org_id!inner  (
             code,
             name,
             logo

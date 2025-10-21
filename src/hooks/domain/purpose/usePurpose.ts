@@ -6,7 +6,7 @@ export const enum PurposeKey {
   fetchManyByOrgQuery = "fetchManyByOrPurpose",
 }
 
-const useFetchManyByOrgQuery = (orgCode: string) => {
+const useFetchAllByOrgQuery = (orgCode: string) => {
   return useQuery({
     enabled: orgCode != null,
     queryKey: [PurposeKey.fetchManyByOrgQuery, orgCode],
@@ -31,5 +31,5 @@ export const usePurpose = () => {
       queryKey: queryKeys,
     });
 
-  return { useFetchManyByOrgQuery, invalidateQuery };
+  return { useFetchAllByOrgQuery, invalidateQuery };
 };

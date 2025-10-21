@@ -12,3 +12,4 @@ export const staffSchema = z.object({
 });
 
 export type Staff = z.infer<typeof staffSchema>;
+export type Admin = z.infer<typeof staffSchema>;

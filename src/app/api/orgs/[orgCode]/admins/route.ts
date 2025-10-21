@@ -9,16 +9,23 @@ export async function GET(
 ) {
   try {
     const { orgCode } = await params;
-
-    // Initialize Supabase server client
     const supabase = await createClient();
 
-    // Fetch purposes for this org
-    const { data: purposes, error: error } = await supabase
-      .from("ticket_purpose")
-      .select("*")
-      .eq("org_code", orgCode)
-      .order("name", { ascending: true });
+    const { data: purposes, error } = await supabase
+      .from("user_org")
+      .select(
+        `
+      *,
+      org:org_id!inner (
+        code,
+        name,
+        logo
+      )
+    `
+      )
+      .eq("org_role", "admin")
+      .eq("org.code", orgCode)
+      .order("created_at", { ascending: true });
 
     if (error) {
       console.error("Supabase error:", error.message);

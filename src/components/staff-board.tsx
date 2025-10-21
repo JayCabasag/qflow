@@ -63,32 +63,38 @@ export function StaffBoard({ org }: Props) {
             {org.toUpperCase()}
           </h1>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 px-4">
           <div className="flex items-center gap-1.5">
             <Users className="h-4 w-4 text-primary" />
-            <div className="text-sm">
+            <div className="text-sm flex">
               <span className="font-semibold">{stats.waiting_count}</span>
-              <span className="text-muted-foreground ml-1">waiting</span>
+              <span className="text-muted-foreground ml-1 hidden md:flex">
+                waiting
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
             <Monitor className="h-4 w-4 text-amber-500" />
-            <div className="text-sm">
+            <div className="text-sm flex">
               <span className="font-semibold">{stats.serving_count}</span>
-              <span className="text-muted-foreground ml-1">serving</span>
+              <span className="text-muted-foreground ml-1 hidden md:flex">
+                serving
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
             <TrendingUp className="h-4 w-4 text-green-600" />
-            <div className="text-sm">
+            <div className="text-sm flex">
               <span className="font-semibold">{stats.completed_count}</span>
-              <span className="text-muted-foreground ml-1">completed</span>
+              <span className="text-muted-foreground ml-1 hidden md:flex">
+                completed
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-3 h-auto lg:h-[calc(100vh-200px)]">
+      <div className="flex flex-col lg:grid lg:grid-cols-4 gap-3 h-auto lg:h-[calc(100vh-200px)]">
         {/* Currently Serving - 2/4 of screen */}
         <div className="lg:col-span-2 bg-white border border-border shadow-sm overflow-hidden flex flex-col">
           <div className="flex flex-row items-center justify-between pb-1 px-3 pt-3 flex-shrink-0">

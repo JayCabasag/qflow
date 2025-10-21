@@ -1,10 +1,11 @@
 "use client";
 
-import PurposeVisitManagement from "./purpose-visit-management";
-import { StaffQueues } from "./staff-queues";
+import PurposeVisitManagement from "./ticket-purpose-manage";
+import { StaffList } from "./staff-list";
 import { AnnouncementManagement } from "./announcement-management";
 import { useOrg } from "@/hooks";
 import { TodaysMetrics } from "./todays-metrics";
+import { AdminList } from "./admin-list";
 
 interface Props {
   org: string;
@@ -28,7 +29,10 @@ export default function AdminBoard({ org }: Props) {
 
   return (
     <div className="grid lg:grid-cols-4 gap-6">
-      <StaffQueues org={data} />
+      <div className="md:col-span-2 gap-6 flex flex-col">
+        <AdminList org={data} />
+        <StaffList org={data} />
+      </div>
       <div className="flex flex-col gap-6">
         <TodaysMetrics />
         <PurposeVisitManagement org={data} />

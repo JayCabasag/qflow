@@ -31,7 +31,7 @@ interface Props {
   org: Org;
 }
 
-export default function PurposeVisitManagement({ org }: Props) {
+export default function TicketPurposeManage({ org }: Props) {
   const [, startTransition] = useTransition();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -40,8 +40,8 @@ export default function PurposeVisitManagement({ org }: Props) {
     id: number;
     name: string;
   } | null>(null);
-  const { useFetchManyByOrgQuery, invalidateQuery } = usePurpose();
-  const { data } = useFetchManyByOrgQuery(org.code);
+  const { useFetchAllByOrgQuery, invalidateQuery } = usePurpose();
+  const { data } = useFetchAllByOrgQuery(org.code);
   const purposeList: Purpose[] = data ?? [];
 
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
