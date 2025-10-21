@@ -7,6 +7,9 @@ import { useOrg } from "@/hooks";
 import { TodaysMetrics } from "./todays-metrics";
 import { AdminList } from "./admin-list";
 
+import { useState } from "react";
+import { AdminBoardHeader } from "./admin-board-header";
+
 interface Props {
   org: string;
 }
@@ -28,17 +31,23 @@ export default function AdminBoard({ org }: Props) {
   }
 
   return (
-    <div className="grid lg:grid-cols-4 gap-6">
-      <div className="md:col-span-2 gap-6 flex flex-col">
-        <AdminList org={data} />
-        <StaffList org={data} />
-      </div>
-      <div className="flex flex-col gap-6">
-        <TodaysMetrics />
-        <PurposeVisitManagement org={data} />
-      </div>
-      <div className="lg:col-span-1 space-y-4">
-        <AnnouncementManagement />
+    <div className="flex flex-col gap-6">
+      {/* Header Section */}
+      <AdminBoardHeader org={data} />
+
+      {/* Main Content Grid */}
+      <div className="grid lg:grid-cols-4 gap-6">
+        <div className="md:col-span-2 gap-6 flex flex-col">
+          <AdminList org={data} />
+          <StaffList org={data} />
+        </div>
+        <div className="flex flex-col gap-6">
+          <TodaysMetrics />
+          <PurposeVisitManagement org={data} />
+        </div>
+        <div className="lg:col-span-1 space-y-4">
+          <AnnouncementManagement />
+        </div>
       </div>
     </div>
   );

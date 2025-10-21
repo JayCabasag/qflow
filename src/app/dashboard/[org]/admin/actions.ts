@@ -149,3 +149,113 @@ export const removeStaff = validatedAction(
     return { success: "success", message: "staff removed successfully" };
   }
 );
+
+const removeOrgSchema = z.object({
+  id: z.coerce.number(),
+  name: z.string(),
+  password: z.string(),
+});
+
+export const removeOrg = validatedAction(removeOrgSchema, async (formData) => {
+  const { id, name, password } = formData;
+
+  const supabase = await createClient();
+
+  // Step 1: Get the current authenticated user
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return {
+      error: "Unauthorized: You must be logged in",
+      id,
+      name,
+      password,
+    };
+  }
+
+  console.log(formData, user.id);
+
+  // Step 2: Verify the user is an admin of this organization
+  const { data: orgAdmin, error: adminCheckError } = await supabase
+    .from("user_org")
+    .select("*, org:org_id!inner(*)")
+    .eq("org_id", id)
+    .eq("user_id", user.id)
+    .eq("org_role", "admin")
+    .single();
+
+  if (adminCheckError || !orgAdmin) {
+    return {
+      error: "Unauthorized: You are not an admin of this organization",
+      id,
+      name,
+      password,
+    };
+  }
+
+  // Step 3: Verify the organization name matches (additional safety check)
+  if (orgAdmin.org?.name !== name) {
+    return {
+      error: "Organization name does not match. Please verify and try again.",
+      id,
+      name,
+      password,
+    };
+  }
+
+  // Step 4: Verify the password by attempting to sign in
+  const { error: passwordError } = await supabase.auth.signInWithPassword({
+    email: user.email!,
+    password: password,
+  });
+
+  if (passwordError) {
+    return {
+      error: "Invalid password. Please check your password and try again.",
+      id,
+      name,
+      password,
+    };
+  }
+
+  // Step 5: Proceed with deletion - Delete the organization
+  const { data: deletedOrg, error: deleteError } = await supabase
+    .from("org")
+    .delete()
+    .eq("id", orgAdmin.org.id)
+    .select();
+
+  if (deleteError) {
+    console.log(deleteError);
+    return {
+      error: `Failed to delete organization: ${deleteError.message}`,
+      id,
+      name,
+      password,
+    };
+  }
+
+  if (!deletedOrg || deletedOrg.length === 0) {
+    return {
+      error: "Failed to delete organization",
+      id,
+      name,
+      password,
+    };
+  }
+
+  // Step 6: Delete all in parallel using Promise.allSettled for better error handling
+  await Promise.allSettled([
+    supabase.from("user_org").delete().eq("org_id", orgAdmin.org.id),
+    supabase.from("ticket").delete().eq("org_id", orgAdmin.org.id),
+    supabase.from("ticket_purpose").delete().eq("org_id", orgAdmin.org.id),
+  ]);
+
+  return {
+    success: "success",
+    message: `Organization "${name}" has been permanently deleted`,
+  };
+});
